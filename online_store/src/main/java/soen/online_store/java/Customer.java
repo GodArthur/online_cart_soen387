@@ -11,7 +11,8 @@ public class Customer extends User{
     private String address;
     private String phoneNumber;
     private String email;
-
+    private Cart cart;
+    
     public Customer(String customerId, String address, String phoneNumber, String userID, String username, String password, String role) {
         super(userID, username, password, role);
         this.customerId = customerId;
@@ -50,6 +51,15 @@ public class Customer extends User{
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+    
     
     
 }
