@@ -3,7 +3,7 @@ package soen.online_store.java;
 
 /**
  *
- * @author Kojo
+ * @author Korjon Chang
  */
 public class Product {
     
@@ -20,6 +20,12 @@ public class Product {
        this.vendor = vendor;
        this.URLSlug = URLSlug;
        this.price = price;
+   }
+   
+   public Product(String sku, String name){
+       
+       this.name = name;
+       this.SKU = SKU;
    }
 
     public String getName() {
