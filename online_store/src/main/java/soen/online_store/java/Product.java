@@ -2,27 +2,30 @@
 package soen.online_store.java;
 
 /**
- *
+ * Entity Class for products
+ * 
  * @author Korjon Chang
  */
 public class Product {
     
    private String name;
+   private String description;
    private String vendor;
    private String URLSlug;
    private String SKU;
    private double price;
    
-   public Product(String name, String vendor, String URLSlug, String SKU, double price){
+   public Product(String name, String description, String vendor, String URLSlug, String SKU, double price){
        
        this.name = name;
+       this.description = description;
        this.SKU = SKU;
        this.vendor = vendor;
        this.URLSlug = URLSlug;
        this.price = price;
    }
    
-   public Product(String sku, String name){
+   public Product(String SKU, String name){
        
        this.name = name;
        this.SKU = SKU;
@@ -35,6 +38,15 @@ public class Product {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
 
     public String getVendor() {
         return vendor;

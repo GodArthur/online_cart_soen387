@@ -1,23 +1,27 @@
-
 package soen.online_store.java;
 
 /**
  *
- * @author Kojo
+ * @author Korjon Chang
  */
 public class User {
-    
-    
+
     private String userID;
     private String username;
     private String password;
-    private String role;
+    private String firstName;
+    private String lastName;
+    private Cart cart;
+    private boolean isStaff;
+   
 
-    public User(String userID, String username, String password, String role) {
+    public User(String userID, String username, String password, boolean isStaff, Cart cart) {
         this.userID = userID;
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.isStaff = isStaff;
+        this.cart = cart;
+        
     }
 
     public String getUserID() {
@@ -44,13 +48,36 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
-    
-    
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public boolean isIsStaff() {
+        return isStaff;
+    }
+
+    public void setIsStaff(boolean isStaff) {
+        this.isStaff = isStaff;
+    }
+
 }
