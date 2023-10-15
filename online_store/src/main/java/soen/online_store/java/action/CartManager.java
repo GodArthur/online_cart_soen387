@@ -9,13 +9,12 @@ import java.util.*;
  */
 public class CartManager {
     
-    private List<Cart> carts;
     private ProductManager productManager;
     
     
     public CartManager(List<Cart> carts, ProductManager productManager){
         
-        this.carts = carts;
+        //this.carts = carts;
         this.productManager = productManager;
     }
         
@@ -42,9 +41,7 @@ public class CartManager {
             
             user.getCart().getProducts().add(p);
         }
-        
-        user.getCart().getProducts().add(p);
-        
+                
     }
     
     /**

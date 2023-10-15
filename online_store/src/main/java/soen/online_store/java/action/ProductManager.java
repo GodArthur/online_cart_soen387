@@ -35,15 +35,18 @@ public class ProductManager {
         //Checking if the fields passed were null
         if (name != null) {
             p.setName(name);
-        } else if (vendor != null) {
+        }
+        if (vendor != null) {
 
             p.setVendor(vendor);
 
-        } else if (URLSlug != null) {
+        }
+        if (URLSlug != null) {
 
             p.setURLSlug(URLSlug);
 
-        } else if (price != -1) {
+        }
+        if (price != -1) {
 
             p.setPrice(price);
 
