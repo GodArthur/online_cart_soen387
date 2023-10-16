@@ -5,5 +5,5 @@ soen\online_store\JakartaRestConfiguration.class
 soen\online_store\java\action\ProductManager.class
 soen\online_store\java\User.class
 soen\online_store\java\action\ProductCatalog.class
-soen\online_store\java\CartItem.class
 soen\online_store\java\Product.class
+soen\online_store\java\servlets\HomeServlet.class
