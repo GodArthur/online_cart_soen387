@@ -12,9 +12,8 @@ public class CartManager {
     private ProductManager productManager;
     
     
-    public CartManager(List<Cart> carts, ProductManager productManager){
+    public CartManager(ProductManager productManager){
         
-        //this.carts = carts;
         this.productManager = productManager;
     }
         
@@ -55,6 +54,5 @@ public class CartManager {
         
         user.getCart().getProducts().removeIf(e -> e.getSKU().equals(SKU));
     }
-    
-    
+   
 }
