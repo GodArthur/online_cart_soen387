@@ -33,6 +33,11 @@ public class ProductCatalog {
             // Retrieve products from the product manager
             List<Product> products = productManager.getAllProducts();
 
+        if (products.isEmpty()) {
+            //Throws message if there are no products
+            throw new IllegalStateException("No products for retrieval");
+        }
+
             // Write product details to the CSV
             for (Product product : products) {
                 writer.write(String.format(
