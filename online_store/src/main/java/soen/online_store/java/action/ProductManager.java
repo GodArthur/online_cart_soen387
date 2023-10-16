@@ -18,6 +18,13 @@ public class ProductManager {
 
     public void CreateProduct(String sku, String name) {
 
+        /**
+        * Checks if the required parameters are missing or not,
+        * when creating the desired product.
+        **/
+        if (sku == null || name == null) {
+        throw new IllegalArgumentException("SKU/Name cannot be empty");
+    }
         //Creating and adding the new product to the
         //list of products
         products.add(new Product(sku, name));
@@ -31,6 +38,11 @@ public class ProductManager {
                 .filter(e -> e.getSKU().equals(SKU))
                 .findFirst()
                 .orElse(null);
+
+        if (p == null) {
+        //Throws message if product is empty
+        throw new IllegalArgumentException("Product not found, for SKU: " + SKU);
+    }
 
         //Checking if the fields passed were null
         if (name != null) {
@@ -60,6 +72,11 @@ public class ProductManager {
                 .findFirst()
                 .orElse(null);
 
+      if (p == null) {
+        //Throws message if product is empty
+        throw new IllegalArgumentException("Product not found, for SKU: " + SKU);
+    }
+
         return p;
     }
 
@@ -69,6 +86,11 @@ public class ProductManager {
                 .filter(e -> e.getURLSlug().equals(slug))
                 .findFirst()
                 .orElse(null);
+
+        if (p == null) {
+        //Throws message if product is empty
+        throw new IllegalArgumentException("Product not found, for slug: " + slug);
+    }
 
         return p;
     }
