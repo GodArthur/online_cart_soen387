@@ -32,15 +32,22 @@ public class CartManager {
                 .filter(e -> e.getSKU().equals(SKU))
                 .findFirst()
                 .orElse(null);
+
+        if (p == null) {
+        //Checks if the product is not found or empty
+        throw new IllegalArgumentException("Product not found, for SKU: " + SKU);
+        }
         
         
         boolean isInCart = user.getCart().getProducts().stream()
                 .anyMatch(e -> e.getSKU().equals(p.getSKU()));
         
-        if(! isInCart){
-            
-            user.getCart().getProducts().add(p);
-        }
+        if (!isInCart) {
+        user.getCart().getProducts().add(p);
+    } else {
+        //throws message that the product already exists in the cart
+        throw new IllegalStateException("Product is in the cart already");
+    }
                 
     }
     
@@ -51,9 +58,14 @@ public class CartManager {
      */
    
     public void removeProductFromCart(User user, String SKU){
+
+        boolean removal = user.getCart().getProducts().removeIf(e -> e.getSKU().equals(SKU));
+
+        if (!removal) {
+        //Throws message if the product isnt in the cart
+        throw new IllegalStateException("Product not found, for SKU: " + SKU);
+    }
         
-        
-        user.getCart().getProducts().removeIf(e -> e.getSKU().equals(SKU));
     }
     
     
