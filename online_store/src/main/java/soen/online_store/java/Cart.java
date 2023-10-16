@@ -13,7 +13,13 @@ public class Cart {
     
     public Cart(){
     
-        products = new ArrayList<>();
+        this.products = new ArrayList<>();
+    }
+    
+    public Cart(String cartId){
+        
+        this.products = new ArrayList<>();
+        this.cartId = cartId;
     }
     
     public Cart(List<Product> products, String cartId){
