@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Class initializes default values before the start of the program
+ * in memory
+ * 
  * @author Korjon Chang
  */
 @WebListener
