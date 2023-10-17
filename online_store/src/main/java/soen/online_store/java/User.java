@@ -15,10 +15,12 @@ public class User {
     private boolean isStaff;
    
 
-    public User(String userID, String username, String password, boolean isStaff, Cart cart) {
+    public User(String userID, String username, String password, String firstName, String lastName, boolean isStaff, Cart cart) {
         this.userID = userID;
         this.username = username;
         this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.isStaff = isStaff;
         this.cart = cart;
         
