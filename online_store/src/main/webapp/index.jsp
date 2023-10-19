@@ -13,7 +13,8 @@
         <!-- Optionally include your custom CSS here -->
     </head>
     <body>
-
+            <%-- Check if the user is logged in by looking for the "username" attribute in the session --%>
+            <% User currentUser = (User) session.getAttribute("user"); %>
         <header>
             <nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary p-4 justify-content-center" data-bs-theme="dark">
                 <div class="container-fluid">
@@ -29,6 +30,7 @@
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="#">Home</a>
                             </li>
+                            
                             <li class="nav-item">
                                 <a class="nav-link" href="Login">Login</a>
                             </li>
@@ -36,6 +38,12 @@
                                 <a class="nav-link" href="#">Cart</a>
                             </li>
                         </ul>
+                        <%-- Logout button is the user is connected --%>
+                        <% if (currentUser != null) { %>
+                        <form action="Logout" method="post">
+                        <input type="submit" value="Logout">
+                        </form>
+                        <% } %>
                         <form class="d-flex" role="search">
                             <input class="form-control me-2" type="password" placeholder="Secret Code" aria-label="Password">
                             <button class="btn btn-outline-success" type="submit">Enter</button>
@@ -47,8 +55,11 @@
 
         <main>
              <div>
-            <%-- Check if the user is logged in by looking for the "username" attribute in the session --%>
-            <% User currentUser = (User) session.getAttribute("user"); %>
+            <%-- Display logout message if present --%>
+            <% String logoutMessage = (String) session.getAttribute("logoutMessage"); %>
+            <% if (logoutMessage != null) { %>
+                <p><%= logoutMessage %></p>
+            <% } %>
 
             <%-- Display a welcome message if the user is logged in --%>
             <% if (currentUser != null) { %>

@@ -21,6 +21,8 @@
         <!-- Optionally include your custom CSS here -->
     </head>
     <body>
+        <%-- Check if the user is logged in by looking for the "username" attribute in the session --%>
+            <% User currentUser = (User) session.getAttribute("user"); %>
         <header>
             <nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary p-4 justify-content-center" data-bs-theme="dark">
                 <div class="container-fluid">
@@ -43,6 +45,12 @@
                                 <a class="nav-link" href="#">Cart</a>
                             </li>
                         </ul>
+                        <%-- Logout button is the user is connected --%>
+                        <% if (currentUser != null) { %>
+                        <form action="Logout" method="post">
+                        <input type="submit" value="Logout">
+                        </form>
+                        <% } %>
                         <form class="d-flex" role="search">
                             <input class="form-control me-2" type="password" placeholder="Secret Code" aria-label="Password">
                             <button class="btn btn-outline-success" type="submit">Enter</button>
@@ -54,13 +62,18 @@
         
         
         
-        
-        
+        <% if (currentUser != null) { %>
+            <p> You are already logged in,  <%= currentUser.getUsername()%> </p>
+                        
+        <% } else { %>
         <form action="Login" method="post">  
             Name:<input type="text" name="username"/><br/><br/>  
             Password:<input type="password" name="password"/><br/><br/>  
             <input type="submit" value="login"/>  
         </form>  
+        <% } %>
+        
+        
         
         <%-- Display the error message if present --%>
         <% if (request.getAttribute("error") != null) { %>
