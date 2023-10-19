@@ -70,5 +70,6 @@ public class InitializationContextListener implements ServletContextListener {
         users.add(new User("user005", "michaelLee", "password5", "Michael", "Lee", false, cart5));
 
         sce.getServletContext().setAttribute("users", users);
+        
     }
 }

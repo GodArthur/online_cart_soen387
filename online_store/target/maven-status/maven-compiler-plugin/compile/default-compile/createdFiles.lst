@@ -1,4 +1,5 @@
 soen\online_store\java\listeners\InitializationContextListener.class
+soen\online_store\java\servlets\LoginServlet.class
 soen\online_store\java\Cart.class
 soen\online_store\resources\JakartaEE10Resource.class
 soen\online_store\java\action\CartManager.class
