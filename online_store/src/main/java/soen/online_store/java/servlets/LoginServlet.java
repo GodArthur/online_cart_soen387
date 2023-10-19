@@ -6,12 +6,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import soen.online_store.java.User;
 
 /**
  *
  * @author Kojo
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
+@WebServlet(name = "LoginServlet", urlPatterns = {"/Login"})
 public class LoginServlet extends HttpServlet {
 
     /**
@@ -28,7 +31,38 @@ public class LoginServlet extends HttpServlet {
         
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
-       
+    
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        
+        List<User> users = (List<User>) getServletContext().getAttribute("users");
+        
+        boolean loginSuccessful = false;
+        
+        for (User user : users) {
+        if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+            loginSuccessful = true;
+            break;
+        }
+    }
+
+        
+        if (loginSuccessful) {
+        // Successful login, redirect to a success page
+         HttpSession session = request.getSession();
+
+        // Store user information in the session
+        session.setAttribute("username", username);
+        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        } else {
+        // Failed login, redirect back to the login page with an error message
+        request.setAttribute("error", "Invalid username or password");
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        }
+}
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -41,20 +75,6 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
