@@ -41,22 +41,27 @@ public class LoginServlet extends HttpServlet {
         List<User> users = (List<User>) getServletContext().getAttribute("users");
         
         boolean loginSuccessful = false;
+        User loggedUser = null;
         
         for (User user : users) {
         if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
             loginSuccessful = true;
+            loggedUser = user;
             break;
         }
     }
 
         
         if (loginSuccessful) {
-        // Successful login, redirect to a success page
+        // get or create session
          HttpSession session = request.getSession();
 
         // Store user information in the session
-        session.setAttribute("username", username);
+        session.setAttribute("user", loggedUser);
+        
+        // Successful login, redirect to a success page
         response.sendRedirect(request.getContextPath() + "/index.jsp");
+        
         } else {
         // Failed login, redirect back to the login page with an error message
         request.setAttribute("error", "Invalid username or password");

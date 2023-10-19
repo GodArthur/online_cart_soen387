@@ -46,6 +46,19 @@
         </header>
 
         <main>
+             <div>
+            <%-- Check if the user is logged in by looking for the "username" attribute in the session --%>
+            <% User currentUser = (User) session.getAttribute("user"); %>
+
+            <%-- Display a welcome message if the user is logged in --%>
+            <% if (currentUser != null) { %>
+                <p>Welcome, <%= currentUser.getUsername() %>!</p>
+            <% } else { %>
+                <p>Please Login to continue</p>
+            <% } %>
+            
+            </div>
+            
             <section id="products" class="container mt-5">
                 <div class="row">
 
