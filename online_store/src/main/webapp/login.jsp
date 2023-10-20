@@ -22,10 +22,34 @@
         <!-- Optionally include your custom CSS here -->
     </head>
     <body>
-        <%-- Check if the user is logged in by looking for the "username" attribute in the session --%>
-            <% User currentUser = (User) session.getAttribute("user"); %>
-        <jsp:include page="/WEB-INF/tags/header.tag" />
-        
+        <header>
+                    <%-- Check if the user is logged in by looking for the "username" attribute in the session --%>
+                    <% User currentUser = (User) session.getAttribute("user"); %>
+                    
+                    <%-- Includes the different tabs of the header --%>
+                        <jsp:include page="/WEB-INF/tags/header.tag" />
+                        
+                        
+                    <%--Logout button is the user is connected --%>
+                        <% if (currentUser != null) { %>
+                        <form action="Logout" method="post">
+                        <input type="submit" value="Logout">
+                        </form>
+                         <form class="d-flex" role="search">
+                         <input class="form-control me-2" type="password" placeholder="Secret Code" aria-label="Password">
+                         <button class="btn btn-outline-success" type="submit">Enter</button>
+                        </form>  
+                        <% } %>
+                        
+                        
+                        <%--These are div's for the header, should be remodeled once the tag is working--%>
+                        <%--Current problem is that you cannot test for the user information, the session info is 
+                        not sent to the tag. This creates modeling issues, and moves everything around without
+                        getting the user infos--%>
+                         </div>
+                         </div>
+                         </nav>
+        </header>
         
         
         <% if (currentUser != null) { %>
@@ -38,6 +62,7 @@
             <input type="submit" value="login"/>  
         </form>  
         <% } %>
+        
         
         
         
