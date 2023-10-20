@@ -63,7 +63,7 @@ public class LogoutServlet extends HttpServlet {
         }
         
         // Set a session attribute to indicate that the user has been logged out
-        request.getSession().setAttribute("logoutMessage", "You have been logged out");
+        request.getSession().setAttribute("logoutMessage", "You are logged out");
         
         // Redirect the user to the home page
         response.sendRedirect(request.getContextPath() + "/index.jsp");
