@@ -48,6 +48,14 @@
             <%-- Display a welcome message if the user is logged in --%>
             <% if (currentUser != null) { %>
                 <p>Welcome, <%= currentUser.getUsername() %>!</p>
+                
+                <%-- If the user is a staff, show him the create item option --%>
+                <% if (currentUser.isIsStaff()) { %>
+                 <div class="center-button">
+                 <a href="newItem" class="btn btn-outline-success">Create New Item</a>
+                 </div>
+                <% } %>
+                
             <% } else { %>
             <%-- Display logout message if present --%>
             <% String logoutMessage = (String) session.getAttribute("logoutMessage"); %>
@@ -59,6 +67,9 @@
             <% } %>
             
             </div>
+            
+            
+            
             
             <section id="products" class="container mt-5">
                 <div class="row">
