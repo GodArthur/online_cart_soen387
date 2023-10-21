@@ -45,10 +45,9 @@
         </header>
                          
         <main>
-            <h2><c:out value="${product.name}" /></h2>
-    <p><c:out value="${product.description}" /></p>
-    <p>Price: $<c:out value="${product.price}" /></p>
-    
+            
+    <div class="row">
+        
     <div class="col-md-4 mb-4">
                     <article class="product card">
                         <img src="images/spendr_logo1-removebg.png" alt="${product.name}" class="card-img-top">
@@ -59,15 +58,92 @@
                             <a href="product-details?slug=${product.URLSlug}"  class="btn btn-primary">${product.URLSlug}</a>
                             <p class="card-text">Vendor: ${product.vendor}</p>
                             <p class="card-text">SKU: ${product.SKU}</p>
+                            
+                            <% if (currentUser != null) { %>
+                                <form action="Logout" method="post">
+                                <input type="submit" value="Add to cart">
+                                </form>
+                              <% if (currentUser.isIsStaff()) { %>  
+                                <button id="editButton" class="btn btn-primary">Edit Product</button>
+    
+                                
+                                <% } %>
+                            <% } %>
+                            
                         </div>
                     </article>
     </div>
-            
-            
-            
+                            
+    <div class="col-md-4 mb-4">
+        <article class="product card">
+                     <!-- Edit form (initially hidden) -->
+                     
+                                <form id="editForm" action="product-details" method="post" >
+                                    <img src="images/spendr_logo1-removebg.png" alt="${product.name}" class="card-img-top">
+                                   
+                                   <h2 class="card-title"> 
+                                    <input type="text" name="name" placeholder=${product.name}>
+                                   </h2>
+                                   
+                                   <p class="card-text">
+                                    <input type="text" name="description" placeholder=${product.description}>
+                                   </p>
+                                    
+                                   <p class="card-text">
+                                    <input type="text" name="price"  placeholder="New Price" value =${product.price}>
+                                   </p>
+                                     
+                                   <p class="card-text">
+                                    <input type="text" name="urlSlug" placeholder=${product.URLSlug}>
+                                   </p>
+                                   
+                                   <p class="card-text">
+                                    <input type="text" name="vendor" placeholder=${product.vendor}>
+                                   </p>
+                                   
+                                   <p class="card-text">
+                                    <input type="text" name="sku" placeholder=${product.SKU} readonly>
+                                   </p>
+                                     
+                                    <input type="submit" value="Save">
+                                </form>  
+        </article>
+    </div>
+           
+    
+    </div> 
             
            
         </main>
+                            
+       <script>
+   // JavaScript to handle the "Edit" button click event
+   const editButton = document.getElementById('editButton');
+   const editForm = document.getElementById('editForm');
+
+    editForm.style.display = 'none';
+
+   editButton.addEventListener('click', function() {
+       // Toggle the visibility of the edit form when the "Edit" button is clicked
+       if (editForm.style.display === 'block') {
+           editForm.style.display = 'none';
+       } else {
+           editForm.style.display = 'block';
+       }
+   });
+   
+   // JavaScript to handle the set blank fields to default value
+   document.getElementById("editForm").addEventListener("submit", function (e) {
+        const inputs = this.querySelectorAll("input");
+        inputs.forEach(function (input) {
+            if (input.value.trim() === "" && input.placeholder) {
+                input.value = input.placeholder;
+            }
+        });
+    });
+
+
+</script>
 
         <footer>
             <p>© 2023 Online Storefront</p>

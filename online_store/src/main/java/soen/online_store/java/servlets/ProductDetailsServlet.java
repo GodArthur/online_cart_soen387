@@ -94,7 +94,23 @@ public class ProductDetailsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+        String name = request.getParameter("name");
+        String description = request.getParameter("description");
+        String vendor = request.getParameter("vendor");
+        String urlSlug = request.getParameter("urlSlug");
+        String sku = request.getParameter("sku");
+        double price = Double.parseDouble(request.getParameter("price")); // Parse price as double
+        
+        ProductManager productManager = (ProductManager) getServletContext().getAttribute("productManger");
+        productManager.updateProduct(sku, name, description, vendor, urlSlug, price);
+        // Update the ServletContext attribute with the updated product manager (not necessary in this case)
+        getServletContext().setAttribute("productManger", productManager);
+        response.sendRedirect(request.getContextPath() + "/product-details?slug=" + urlSlug );
+        
+        
+        
+        
     }
 
     /**
