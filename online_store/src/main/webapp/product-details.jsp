@@ -2,6 +2,8 @@
 <%@ page import="soen.online_store.java.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="soen.online_store.java.action.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -43,59 +45,28 @@
         </header>
                          
         <main>
-             <div>
-
-            <%-- Display a welcome message if the user is logged in --%>
-            <% if (currentUser != null) { %>
-                <p>Welcome, <%= currentUser.getUsername() %>!</p>
-                
-                <%-- If the user is a staff, show him the create item option --%>
-                <% if (currentUser.isIsStaff()) { %>
-                 <div class="center-button">
-                 <a href="newItem" class="btn btn-outline-success">Create New Item</a>
-                 </div>
-                <% } %>
-                
-            <% } else { %>
-            <%-- Display logout message if present --%>
-            <% String logoutMessage = (String) session.getAttribute("logoutMessage"); %>
-            <% if (logoutMessage != null) { %>
-                <p><%= logoutMessage %></p>
-            <% } %>
-                <p>Please Login to continue</p>
-                
-            <% } %>
-            
-            </div>
-            
-            
-            
-            
-            <section id="products" class="container mt-5">
-                <div class="row">
-
-                <% 
-                    ProductManager productManager = (ProductManager) getServletContext().getAttribute("productManger");
-                    List<Product> products = productManager.getAllProducts();
-                    for(Product product : products) {
-                %>
-
-                <div class="col-md-4 mb-4">
+            <h2><c:out value="${product.name}" /></h2>
+    <p><c:out value="${product.description}" /></p>
+    <p>Price: $<c:out value="${product.price}" /></p>
+    
+    <div class="col-md-4 mb-4">
                     <article class="product card">
-                        <img src="images/spendr_logo1-removebg.png" alt="<%= product.getName() %>" class="card-img-top">
+                        <img src="images/spendr_logo1-removebg.png" alt="${product.name}" class="card-img-top">
                         <div class="card-body">
-                            <h2 class="card-title"><%= product.getName() %></h2>
-                            <p class="card-text"><%= product.getDescription() %></p>
-                            <p class="card-text">Price: $<%= product.getPrice() %></p>
-                            <a href="product-details?slug=<%= product.getURLSlug() %>"  class="btn btn-primary">See Details</a>
+                            <h2 class="card-title">${product.name}</h2>
+                            <p class="card-text">${product.description}</p>
+                            <p class="card-text">Price: ${product.price}</p>
+                            <a href="product-details?slug=${product.URLSlug}"  class="btn btn-primary">${product.URLSlug}</a>
+                            <p class="card-text">Vendor: ${product.vendor}</p>
+                            <p class="card-text">SKU: ${product.SKU}</p>
                         </div>
                     </article>
-                </div>
-
-                <% } %>
-
-                </div>
-            </section>
+    </div>
+            
+            
+            
+            
+           
         </main>
 
         <footer>
