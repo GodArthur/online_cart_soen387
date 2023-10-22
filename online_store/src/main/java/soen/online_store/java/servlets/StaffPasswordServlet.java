@@ -61,8 +61,32 @@ public class StaffPasswordServlet extends HttpServlet {
         
         String password = request.getParameter("password");
         
-        // Redirect the user to the home page
-        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        boolean OriginalUserStatus = currentUser.isIsStaff();
+        
+        if (currentUser != null) {
+            if ("MagicIn".equals(password)) {
+                currentUser.setIsStaff(true);
+            } else if ("MagicOut".equals(password)) {
+                currentUser.setIsStaff(false);
+            }
+            
+            
+        // just trying to track change in user staff stattus  
+        //not implemented
+        /*if(OriginalUserStatus != currentUser.isIsStaff()){
+            session.setAttribute("StaffStatus", currentUser.isIsStaff());
+        }else {
+            session.setAttribute("StaffStatus", null);
+        }*/
+        
+        
+        // Update the user in the session
+        session.setAttribute("user", currentUser);
+        }
+        
+        response.sendRedirect(request.getContextPath());
     }
 
     /**
