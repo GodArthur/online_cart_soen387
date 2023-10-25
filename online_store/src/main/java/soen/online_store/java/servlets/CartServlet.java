@@ -87,12 +87,26 @@ public class CartServlet extends HttpServlet {
     
     HttpSession session = request.getSession();
     User currentUser = (User) session.getAttribute("user");
+    String method = request.getParameter("_method");
     
     CartManager cartManager = (CartManager) getServletContext().getAttribute("cartManager");
     
     if (currentUser != null) {
+        switch(method) {
+            
         // Call the method to add the product to the cart
+        case "post":
+         
         cartManager.addProductToCart(currentUser, sku);
+          break;
+          
+        // Call the method to add the product to the cart 
+        case "delete":
+        cartManager.removeProductFromCart(currentUser, sku);
+          break;
+
+        }
+        
         
         // Redirect back to the product details page or any other page as needed
          response.sendRedirect("Cart");
@@ -109,6 +123,24 @@ public class CartServlet extends HttpServlet {
      * @return a String containing servlet description
      */
     @Override
+    
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+         String sku = request.getParameter("sku");
+    
+    HttpSession session = request.getSession();
+    User currentUser = (User) session.getAttribute("user");
+    
+    CartManager cartManager = (CartManager) getServletContext().getAttribute("cartManager");
+    
+    
+     response.sendRedirect("Home");
+    
+        
+    }
+    
+    
+    
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
