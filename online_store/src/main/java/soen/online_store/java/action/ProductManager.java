@@ -63,6 +63,7 @@ public class ProductManager {
         return p;
     }
 
+    
     public Product getProductBySlug(String slug) {
 
         Product p = products.stream()
