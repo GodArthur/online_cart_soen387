@@ -93,7 +93,7 @@
                                 </tr>
                                 <c:forEach items="${cart}" var="product">
                                     <tr>
-                                        <td>${product.name}</td>
+                                       <td> <a href="product-details?slug=${product.URLSlug}">${product.name}</a></td>
                                         <td>${product.description}</td>
                                         <td>${product.price}</td>
                                         <td>
