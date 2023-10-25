@@ -123,7 +123,7 @@ public class CartServlet extends HttpServlet {
      * @return a String containing servlet description
      */
     @Override
-    
+    /*Not working*/
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
          String sku = request.getParameter("sku");
