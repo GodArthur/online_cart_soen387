@@ -2,6 +2,7 @@ soen\online_store\java\listeners\InitializationContextListener.class
 soen\online_store\java\servlets\LoginServlet.class
 soen\online_store\java\servlets\ProductDetailsServlet.class
 soen\online_store\java\action\CartManager.class
+soen\online_store\java\servlets\CartServlet.class
 soen\online_store\JakartaRestConfiguration.class
 soen\online_store\java\action\ProductManager.class
 soen\online_store\java\action\ProductCatalog.class

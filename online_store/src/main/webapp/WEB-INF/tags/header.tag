@@ -20,7 +20,7 @@
                                 <a class="nav-link" href="Login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Cart</a>
+                                <a class="nav-link" href="Cart">Cart</a>
                             </li>
                         </ul>
                        
