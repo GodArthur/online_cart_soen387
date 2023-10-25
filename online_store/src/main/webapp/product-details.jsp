@@ -62,6 +62,7 @@
                             <% if (currentUser != null) { %>
                                 <form action="Cart" method="post">
                                 <input type="hidden" name="sku" value="${product.SKU}">
+                                <input type="hidden" name="_method" value="post">
                                 <input type="submit" value="Add to Cart">
                                  </form>
                               <% if (currentUser.isIsStaff()) { %>  
