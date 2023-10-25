@@ -96,6 +96,13 @@
                                         <td>${product.name}</td>
                                         <td>${product.description}</td>
                                         <td>${product.price}</td>
+                                        <td>
+                                            <form action="Cart" method="post">
+                                                <input type="hidden" name="_method" value="delete">
+                                                <input type="hidden" name="sku" value="${product.SKU}">
+                                                <button type="submit" class="btn btn-danger">Remove From Cart</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 </c:forEach>
                             </table>
@@ -110,34 +117,6 @@
            
         </main>
                             
-       <script>
-   // JavaScript to handle the "Edit" button click event
-   const editButton = document.getElementById('editButton');
-   const editForm = document.getElementById('editForm');
-
-    editForm.style.display = 'none';
-
-   editButton.addEventListener('click', function() {
-       // Toggle the visibility of the edit form when the "Edit" button is clicked
-       if (editForm.style.display === 'block') {
-           editForm.style.display = 'none';
-       } else {
-           editForm.style.display = 'block';
-       }
-   });
-   
-   // JavaScript to handle the set blank fields to default value
-   document.getElementById("editForm").addEventListener("submit", function (e) {
-        const inputs = this.querySelectorAll("input");
-        inputs.forEach(function (input) {
-            if (input.value.trim() === "" && input.placeholder) {
-                input.value = input.placeholder;
-            }
-        });
-    });
-
-
-</script>
 
         <footer>
             <p>© 2023 Online Storefront</p>
