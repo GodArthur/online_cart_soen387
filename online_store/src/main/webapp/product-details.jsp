@@ -60,9 +60,10 @@
                             <p class="card-text">SKU: ${product.SKU}</p>
                             
                             <% if (currentUser != null) { %>
-                                <form action="Logout" method="post">
-                                <input type="submit" value="Add to cart">
-                                </form>
+                                <form action="Cart" method="post">
+                                <input type="hidden" name="sku" value="${product.SKU}">
+                                <input type="submit" value="Add to Cart">
+                                 </form>
                               <% if (currentUser.isIsStaff()) { %>  
                                 <button id="editButton" class="btn btn-primary">Edit Product</button>
     

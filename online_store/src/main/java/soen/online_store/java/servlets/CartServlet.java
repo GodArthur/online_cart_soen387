@@ -11,6 +11,7 @@ import java.util.List;
 import soen.online_store.java.Cart;
 import soen.online_store.java.Product;
 import soen.online_store.java.User;
+import soen.online_store.java.action.CartManager;
 
 /**
  *
@@ -82,7 +83,24 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String sku = request.getParameter("sku");
+    
+    HttpSession session = request.getSession();
+    User currentUser = (User) session.getAttribute("user");
+    
+    CartManager cartManager = (CartManager) getServletContext().getAttribute("cartManager");
+    
+    if (currentUser != null) {
+        // Call the method to add the product to the cart
+        cartManager.addProductToCart(currentUser, sku);
+        
+        // Redirect back to the product details page or any other page as needed
+         response.sendRedirect("Cart");
+    } else {
+        // Handle the case where the user is not logged in
+        response.sendRedirect("login.jsp"); // Redirect to the login page
+        }
+    
     }
 
     /**
