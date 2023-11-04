@@ -1,0 +1,293 @@
+commit ab0b8022d43d86fe0e7d9397c1cebab080d04abd
+Merge: b3d3f56 9fba5e7
+Author: Code of K <korjon0000@gmail.com>
+Date:   Wed Oct 25 18:07:07 2023 -0400
+
+    fixed merge conflicts
+
+commit 9fba5e75372c66023d7de415d4a9c57033dd81e1
+Merge: 5a94a31 378a454
+Author: Kojo Chang-Jones <korjon0000@gmail.com>
+Date:   Wed Oct 25 17:46:36 2023 -0400
+
+    Merge pull request #9 from GodArthur/A1
+    
+    A1
+
+commit 378a4548e003f44216d01c83133b1c3fcaf6a709
+Merge: 693388d ec6adfd
+Author: djamh <91389874+djamh@users.noreply.github.com>
+Date:   Wed Oct 25 17:45:53 2023 -0400
+
+    Merge pull request #8 from GodArthur/djam
+    
+    added links to product in the cart page
+
+commit ec6adfd8706e2cc32295a06a957c3058bfe26db4
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Wed Oct 25 17:33:53 2023 -0400
+
+    added links to product in the cart page
+
+commit 693388d280178bb44f925f75d5d1dc7721395afc
+Merge: f10527f bb9cd5d
+Author: djamh <91389874+djamh@users.noreply.github.com>
+Date:   Wed Oct 25 17:17:14 2023 -0400
+
+    Merge pull request #7 from GodArthur/djam
+    
+    Remove Item
+
+commit bb9cd5d6cc1a4b60e4e959442bc989e96bdb21c6
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Wed Oct 25 17:14:03 2023 -0400
+
+    you can remove items from the cart, wrong path tho
+
+commit f10527fc24b04fe9b22a446cb66d663851f7dfe0
+Merge: c655ca2 1935af3
+Author: djamh <91389874+djamh@users.noreply.github.com>
+Date:   Wed Oct 25 16:19:50 2023 -0400
+
+    Merge pull request #6 from GodArthur/djam
+    
+    Add Item to cart
+
+commit 1935af38e616bbd2950c56b5a58b3ac15287776e
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Wed Oct 25 16:15:43 2023 -0400
+
+    you can now add an item to the cart
+
+commit c655ca2637a4bc39cc477d227a74a31795a6c85f
+Merge: 5a94a31 f93dddf
+Author: djamh <91389874+djamh@users.noreply.github.com>
+Date:   Wed Oct 25 15:54:48 2023 -0400
+
+    Merge pull request #5 from GodArthur/djam
+    
+    Djam
+
+commit f93dddfc00921204dfc90ccaec29838aa8eb9ebf
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Wed Oct 25 15:51:58 2023 -0400
+
+    you can now see the cart of a user when clicking on cart, user must be connected
+
+commit 17b67ed816ce372a002dc23d2ea8170e2c04ff0b
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Sat Oct 21 20:24:06 2023 -0400
+
+    user can now become staff member by entering MagicIn or becomre regular user with MagicOut
+
+commit 15e23d848bea0649645f39d43ab780b3c8af1335
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Sat Oct 21 18:26:50 2023 -0400
+
+    you can now download a .csv file of all the product catalog, using the download method of product catalog
+
+commit 1a045b012d8ec061887a8627a7a23a8053076a93
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Sat Oct 21 14:15:20 2023 -0400
+
+    staff member can now modify product
+
+commit d47b61ada69c061d0886767e710b7af7707b9946
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Sat Oct 21 12:02:33 2023 -0400
+
+    product details page is done,jakarta tag lib dependy added to .pom file
+
+commit 07225123c838ac17840103f92113dbbc0e3468b9
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Fri Oct 20 20:14:43 2023 -0400
+
+    a staff member can now create a new item which will be displayed on the home page
+
+commit bc5dfeff5b6d030c05f95ff7720868524ad2109e
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Fri Oct 20 17:23:27 2023 -0400
+
+    littles changes to tag header which wasnt working + new servlet to access the secret password button
+
+commit f8efd79efeeb3015a43c6c92f1c2d3ef4b933e8f
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Fri Oct 20 16:17:53 2023 -0400
+
+    header tag has been added to be more efficient
+
+commit 32f5bfa391a70ecabfe9bba08b4d119d02181420
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Thu Oct 19 16:54:46 2023 -0400
+
+    logout added to session tracking
+
+commit f78451abf18405dd2a4a26e18979d6df4f919999
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Thu Oct 19 16:26:04 2023 -0400
+
+    logging is and session tracking is done
+
+commit 737313b74cc91518755d07084410a6e0699eecb2
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Thu Oct 19 15:58:00 2023 -0400
+
+    login checkup is done
+
+commit 60c54e8cb216091059c027ad22573102ca7800e0
+Author: Djamal <djamhunter@hotmail.com>
+Date:   Thu Oct 19 14:23:01 2023 -0400
+
+    new servlet added with url to new web page
+
+commit 5a94a3114f8377ebc3dcd18b0aaac85b24618a49
+Merge: 8b5936e 9143a04
+Author: Kojo Chang-Jones <korjon0000@gmail.com>
+Date:   Tue Oct 17 00:12:40 2023 -0400
+
+    Merge pull request #4 from GodArthur/kojo
+    
+    Kojo
+
+commit 9143a0479990bd830c8793241ab0d99674941551
+Author: unknown <korjon0000@gmail.com>
+Date:   Tue Oct 17 00:12:15 2023 -0400
+
+    made some modification
+
+commit ae2207e7e43e9229097fd697a0f22e03219476d2
+Merge: a705d89 4c9850a
+Author: unknown <korjon0000@gmail.com>
+Date:   Mon Oct 16 23:53:17 2023 -0400
+
+    Merge branch 'kojo' of https://github.com/GodArthur/online_cart_soen387 into kojo
+
+commit 8b5936e84363f8ececca9d992aeed42cea23c4c0
+Merge: 448cd36 4c9850a
+Author: Kojo Chang-Jones <korjon0000@gmail.com>
+Date:   Mon Oct 16 15:23:38 2023 -0400
+
+    Merge pull request #3 from GodArthur/kojo
+    
+    Kojo
+
+commit 4c9850a8f4c7e5f6f7d56256cda998298e0241d9
+Author: Code of K <korjon0000@gmail.com>
+Date:   Mon Oct 16 15:22:07 2023 -0400
+
+    pulled from main
+
+commit a15e51aeefccb251903b38763b8b2fd1f05f5753
+Merge: b61e260 448cd36
+Author: Code of K <korjon0000@gmail.com>
+Date:   Mon Oct 16 15:21:18 2023 -0400
+
+    Merge branch 'main' of https://github.com/GodArthur/online_cart_soen387 into kojo
+
+commit b61e260cbaadd69b243fc20f2252717568da722a
+Author: Code of K <korjon0000@gmail.com>
+Date:   Mon Oct 16 15:21:06 2023 -0400
+
+    Made the Home page and listed all products
+
+commit ca2e396ef6b67e7b6c4e0792ebfc92aa849f79b1
+Author: Code of K <korjon0000@gmail.com>
+Date:   Mon Oct 16 15:05:26 2023 -0400
+
+    added a grit layout to the home page to display products
+
+commit b3d3f56eefb7adce35fd44cd7f0633d6a959740f
+Author: Code of K <korjon0000@gmail.com>
+Date:   Mon Oct 16 13:20:00 2023 -0400
+
+    added files
+
+commit a705d89d4fbd948f2fd449e886cbdf6fd2e81879
+Author: unknown <korjon0000@gmail.com>
+Date:   Mon Oct 16 10:50:16 2023 -0400
+
+    started the initialization listener that will initialize the objects at the beginning of the program
+
+commit 379636282c3833336f7cfd0373e046790ea36f91
+Author: unknown <korjon0000@gmail.com>
+Date:   Mon Oct 16 02:27:39 2023 -0400
+
+    created the home servlet
+
+commit 448cd36b6e6c5fa74613b3e5cad80e075c433349
+Merge: 8aeac11 5cb40f1
+Author: Kojo Chang-Jones <korjon0000@gmail.com>
+Date:   Sun Oct 15 19:57:07 2023 -0400
+
+    Merge pull request #2 from GodArthur/kojo
+    
+    fixed error in cart and product manager classes
+
+commit 5cb40f1bb5d96f5f244dab9f0e0e5f60ce37e6c2
+Author: unknown <korjon0000@gmail.com>
+Date:   Sun Oct 15 19:43:31 2023 -0400
+
+    fixed error in cart and product manager classes
+
+commit 8aeac1189ac5a207dbf14c21a947e502800e3fa2
+Merge: 483fe3f 785d3d7
+Author: Kojo Chang-Jones <korjon0000@gmail.com>
+Date:   Sun Oct 15 19:24:48 2023 -0400
+
+    Merge pull request #1 from GodArthur/kojo
+    
+    made navbar for home page
+
+commit 785d3d7af0e7e88140154aff2b7e724e433fd0d2
+Author: unknown <korjon0000@gmail.com>
+Date:   Sun Oct 15 19:21:46 2023 -0400
+
+    made navbar for home page
+
+commit 483fe3f9b44b7822e29468b8ffdae61be50cd7cf
+Author: Code of K <korjon0000@gmail.com>
+Date:   Wed Oct 11 20:46:52 2023 -0400
+
+    Have a starting template for the index page
+
+commit 70f5a9bce259f3499b5d4522d63e87e02bbca4e3
+Author: Code of K <korjon0000@gmail.com>
+Date:   Wed Oct 11 20:35:56 2023 -0400
+
+    Finished the business and entity logic for online store
+
+commit a6f127ea3a1bcc6a898a9d96fbbd4b36695c73e1
+Author: unknown <korjon0000@gmail.com>
+Date:   Wed Oct 11 00:15:11 2023 -0400
+
+    trying to figure out cartservice business class
+
+commit 1e1a936f78c2c0781c60857ccee2d75a3753e8b8
+Author: Code of K <korjon0000@gmail.com>
+Date:   Tue Oct 10 21:52:51 2023 -0400
+
+    starting the business managing classes
+
+commit 66c2b29cac8e26abbdaeb29b688caaaf9ac7080d
+Author: Code of K <korjon0000@gmail.com>
+Date:   Tue Oct 10 16:54:23 2023 -0400
+
+    created all necessary entities
+
+commit b12d3f04276abf53b6cf04e06ad9d46b0bf21f7a
+Author: unknown <korjon0000@gmail.com>
+Date:   Mon Oct 9 21:30:33 2023 -0400
+
+    adding entity classes
+
+commit 5d82c01712d1c642910c2609c4d20c08715f4b36
+Author: Code of K <korjon0000@gmail.com>
+Date:   Sun Oct 8 22:56:12 2023 -0400
+
+    started the initial project file
+
+commit 65f2457d324d0ef91aa6b0af8f27ce9bf4ac969e
+Author: Kojo Chang-Jones <korjon0000@gmail.com>
+Date:   Sun Oct 8 22:13:08 2023 -0400
+
+    Initial commit
