@@ -14,6 +14,7 @@ public class Product {
    private String URLSlug;
    private String SKU;
    private double price;
+    private int quantity; // This is the new attribute for quantity
    
    public Product(String name, String description, String vendor, String URLSlug, String SKU, double price){
        
@@ -47,7 +48,14 @@ public class Product {
         this.description = description;
     }
     
+    public int getQuantity() {
+        return quantity;
+    }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    
     public String getVendor() {
         return vendor;
     }
