@@ -12,7 +12,7 @@ public class DatabaseConnection {
     
      private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/spendr";
     private static final String DATABASE_USER = "dbuser";
-    private static final String DATABASE_PASSWORD = "dbpas";
+    private static final String DATABASE_PASSWORD = "dbpass";
 
     public static Connection getConnection() {
         Connection conn = null;
