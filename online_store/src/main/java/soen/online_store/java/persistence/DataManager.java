@@ -54,7 +54,7 @@ public class DataManager {
 
             
             //Query String
-            String sql = "select name, sku, descrpition, vendor, urlSlug, price from PRODUCTS";
+            String sql = "select * from PRODUCTS";
             
             //Creating the query object used to execute the query
             PreparedStatement ps = conn.prepareStatement(sql);
