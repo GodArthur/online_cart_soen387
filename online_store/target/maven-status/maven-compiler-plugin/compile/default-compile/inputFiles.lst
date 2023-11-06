@@ -3,6 +3,7 @@ C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\j
 C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\servlets\HomeServlet.java
 C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\servlets\StaffPasswordServlet.java
 C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\action\ProductManager.java
+C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\persistence\DatabaseConnection.java
 C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\JakartaRestConfiguration.java
 C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\Product.java
 C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\servlets\CartServlet.java
@@ -13,5 +14,7 @@ C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\j
 C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\servlets\NewItemServlet.java
 C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\listeners\InitializationContextListener.java
 C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\Cart.java
+C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\listeners\DBContextListener.java
 C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\resources\JakartaEE10Resource.java
+C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\persistence\DataManager.java
 C:\Users\korjo\Documents\compsci\387\online_cart_soen387\online_store\src\main\java\soen\online_store\java\servlets\LogoutServlet.java
