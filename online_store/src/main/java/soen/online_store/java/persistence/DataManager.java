@@ -17,7 +17,7 @@ public class DataManager {
 
     /**
      * Constructor for the DataManager
-     * @param da A database Connection object
+     * @param dbConnection A database Connection object
      */
     public DataManager(DatabaseConnection dbConnection) {
 
@@ -183,10 +183,41 @@ public class DataManager {
         
     }
     
+    public void updateProduct(String sku, String name, String description, String vendor, String urlSlug, Double price) throws SQLException {
+    List<String> fieldsToUpdate = new ArrayList<>();
     
+    if (name != null) fieldsToUpdate.add("name = ?");
+    if (description != null) fieldsToUpdate.add("description = ?");
+    if (vendor != null) fieldsToUpdate.add("vendor = ?");
+    if (urlSlug != null) fieldsToUpdate.add("urlSlug = ?");
+    if (price != null) fieldsToUpdate.add("price = ?");
     
+    if (fieldsToUpdate.isEmpty()) {
+        throw new IllegalArgumentException("No fields provided for update");
+    }
     
+    String sql = "UPDATE PRODUCTS SET " + String.join(", ", fieldsToUpdate) + " WHERE sku = ?";
     
-    
+    try (Connection conn = dbConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        int index = 1;
+        if (name != null) ps.setString(index++, name);
+        if (description != null) ps.setString(index++, description);
+        if (vendor != null) ps.setString(index++, vendor);
+        if (urlSlug != null) ps.setString(index++, urlSlug);
+        if (price != null) ps.setDouble(index++, price);
+        
+        ps.setString(index, sku);
+        
+        int rowsAffected = ps.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Product updated successfully!");
+        } else {
+            System.out.println("Product with SKU " + sku + " not found.");
+        }
+    }
+}
 
+    
 }
