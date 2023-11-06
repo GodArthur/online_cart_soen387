@@ -54,7 +54,7 @@ public class DataManager {
 
             
             //Query String
-            String sql = "select * from PRODUCTS";
+            String sql = "select name, sku, description, vendor, urlSlug, price from PRODUCTS";
             
             //Creating the query object used to execute the query
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -98,7 +98,7 @@ public class DataManager {
 
             
             //Query String
-            String sql = "select name, sku, descrpition, vendor, urlSlug, price from PRODUCTS where sku = ?";
+            String sql = "select name, sku, description, vendor, urlSlug, price from PRODUCTS where sku = ?";
             
             //Creating the query object used to execute the query
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -147,7 +147,7 @@ public class DataManager {
 
             
             //Query String
-            String sql = "select name, sku, descrpition, vendor, urlSlug, price from PRODUCTS where urlSlug = ?";
+            String sql = "select name, sku, description, vendor, urlSlug, price from PRODUCTS where urlSlug = ?";
             
             //Creating the query object used to execute the query
             PreparedStatement ps = conn.prepareStatement(sql);
