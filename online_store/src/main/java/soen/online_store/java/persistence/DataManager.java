@@ -52,13 +52,23 @@ public class DataManager {
         Product p = null;
         try (Connection conn = dbConnection.getConnection()) {
 
+            
+            //Query String
             String sql = "select * from PRODUCTS where sku = ?";
+            
+            //Creating the query object used to execute the query
             PreparedStatement ps = conn.prepareStatement(sql);
+            
+            //Setting the value in the question mark
             ps.setString(1, sku);
 
+            //Resultset is the set of rows returned from the query
             ResultSet rs = ps.executeQuery();
 
-            
+            //Iterating through the resultSet (or rows)
+            //And checking if there is a next row to iterate over
+            //next() is the current row, so if it currently has a row
+            //to check
             while (rs.next()) {
 
                 p = new Product(
