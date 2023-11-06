@@ -29,7 +29,11 @@ public class DBContextListener implements ServletContextListener{
             throw new RuntimeException("Failed to load database configuration", e);
         }
     }
-
+    
+    /*
+    
+    Once you need access to these configuration properties, 
+    */
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         // Perform cleanup if necessary

@@ -10,21 +10,23 @@ import java.sql.SQLException;
  */
 public class DatabaseConnection {
     
-     private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/spendr";
-    private static final String DATABASE_USER = "dbuser";
-    private static final String DATABASE_PASSWORD = "dbpass";
+     private final String url;
+    private final String user;
+    private final String password;
 
-    public static Connection getConnection() {
-        Connection conn = null;
+    public DatabaseConnection(String url, String user, String password) {
+        this.url = url;
+        this.user = user;
+        this.password = password;
+    }
+
+    public Connection getConnection() throws SQLException {
+        // Ensure the JDBC driver is loaded (may be unnecessary with newer JDBC versions)
         try {
-            // Register JDBC driver
             Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // Open a connection
-            conn = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("MySQL JDBC driver not found", e);
         }
-        return conn;
+        return DriverManager.getConnection(url, user, password);
     }
 }
