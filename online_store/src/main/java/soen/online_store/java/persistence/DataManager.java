@@ -11,14 +11,17 @@ import java.sql.Statement;
  */
 public class DataManager {
     
-    public static void main(String[] args){
-        
-        try{
-        Connection conn = DatabaseConnection.getConnection();
-        System.out.println("Connection complete");
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-    }
+   private Connection conn = null;
+   
+   public DataManager(Connection conn){
+       
+       this.conn = conn;
+
+   }
+   
+   
+           
+           
+           
+           
 }
