@@ -16,7 +16,7 @@ public class DBContextListener implements ServletContextListener{
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         Properties configProps = new Properties();
-        String configFile = "/WEB-INF/config.properties"; // The path to the config file
+        String configFile = "/META-INF/config.properties"; // The path to the config file
 
         try (InputStream inputStream = sce.getServletContext().getResourceAsStream(configFile)) {
             if (inputStream == null) {

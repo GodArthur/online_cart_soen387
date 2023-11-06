@@ -1,6 +1,8 @@
-
 package soen.online_store.java.servlets;
 
+import java.util.*;
+import soen.online_store.java.persistence.*;
+import soen.online_store.java.*;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -27,6 +29,20 @@ public class HomeServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+       
+        //Retrieving db credentials from config located in a Servlet Context
+        Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
+        String dbUrl = configProps.getProperty("database.url");
+        String dbUser = configProps.getProperty("database.user");
+        String dbPassword = configProps.getProperty("database.password");
+        String dbDriver = configProps.getProperty("database.driver");
+        
+        DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
+        DataManager dataManager = new DataManager(dbConnection);
+        
+        List<Product> products = dataManager.getAllProducts();
+        
+        request.setAttribute("productList", products);
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
        
