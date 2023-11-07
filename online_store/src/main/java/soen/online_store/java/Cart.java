@@ -10,7 +10,6 @@ public class Cart {
     List<Product> products;
     private String cartId;
     
-    
     public Cart(){
     
         this.products = new ArrayList<>();
