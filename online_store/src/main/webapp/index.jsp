@@ -94,6 +94,25 @@
 
         </div>
     </section>
+         <section id="products" class="container mt-5">
+        <div class="row">
+
+          <c:forEach var="product" items="${requestScope.productList}">
+            <div class="col-md-4 mb-4">
+                <article class="product card">
+                    <img src="images/spendr_logo1-removebg.png" alt="${product.name}" class="card-img-top">
+                    <div class="card-body">
+                        <h2 class="card-title">${product.name}</h2>
+                        <p class="card-text">${product.description}</p>
+                        <p class="card-text">Price: $${product.price}</p>
+                        <a href="product-details?slug=${product.URLSlug}" class="btn btn-primary">See Details</a>
+                    </div>
+                </article>
+            </div>
+        </c:forEach>
+
+        </div>
+    </section>
 
     <%-- If the user is a staff, show him the download catalog option--%>
     <% if (currentUser != null && currentUser.isIsStaff()) { %>

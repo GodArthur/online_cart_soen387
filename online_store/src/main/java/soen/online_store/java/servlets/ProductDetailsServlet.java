@@ -8,9 +8,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Properties;
 import soen.online_store.java.Product;
 import soen.online_store.java.User;
 import soen.online_store.java.action.ProductManager;
+import soen.online_store.java.persistence.DataManager;
+import soen.online_store.java.persistence.DatabaseConnection;
 
 /**
  *
@@ -64,9 +67,16 @@ public class ProductDetailsServlet extends HttpServlet {
         }
 
         if (urlSlug != null) {
-            // Fetch product details based on the URL slug from your product manager or database
-            ProductManager productManager = (ProductManager) getServletContext().getAttribute("productManger");
-             Product product = productManager.getProductBySlug(urlSlug); // Adjust this to your specific implementation
+            //Retrieving db credentials from config located in a Servlet Context
+        Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
+        String dbUrl = configProps.getProperty("database.url");
+        String dbUser = configProps.getProperty("database.user");
+        String dbPassword = configProps.getProperty("database.password");
+        String dbDriver = configProps.getProperty("database.driver");
+        
+        DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
+        DataManager dataManager = new DataManager(dbConnection);
+        Product product = dataManager.getProductBySlug(urlSlug); // Adjust this to your specific implementation
 
             if (product != null) {
                 // Forward to the product details page, passing the product details
