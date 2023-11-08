@@ -36,7 +36,7 @@ public class CartServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -51,40 +51,39 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) {
-        // User is not logged in, redirect to the login page
-        response.sendRedirect(request.getContextPath() + "/Login"); // Replace "Login" with the URL of your login page
-        return; // Terminate the servlet to prevent further processing
-    }
+            // User is not logged in, redirect to the login page
+            response.sendRedirect(request.getContextPath() + "/Login"); // Replace "Login" with the URL of your login page
+            return; // Terminate the servlet to prevent further processing
+        }
+
         Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
         String dbUrl = configProps.getProperty("database.url");
         String dbUser = configProps.getProperty("database.user");
         String dbPassword = configProps.getProperty("database.password");
         String dbDriver = configProps.getProperty("database.driver");
-        
+
         DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
         DataManager dataManager = new DataManager(dbConnection);
-        
+
         Cart currentCart = dataManager.getCart(currentUser);
         //Cart currentCart = (Cart) currentUser.getCart();
-        if(currentUser.getCart() == null){
-        currentUser.setCart(currentCart);
+        if (currentUser.getCart() == null) {
+            currentUser.setCart(currentCart);
         }
         List<CartItem> cartItems = currentCart.getCartItems();
-        
-        
-        
+
         if (cartItems.isEmpty() || currentCart == null) {
-             request.setAttribute("cartEmpty", true);
+            request.setAttribute("cartEmpty", true);
         } else {
             request.setAttribute("cart", cartItems);
         }
 
         request.getRequestDispatcher("/cart.jsp").forward(request, response);
-        
+
     }
 
     /**
@@ -98,38 +97,68 @@ public class CartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String sku = request.getParameter("sku");
-    
-    HttpSession session = request.getSession();
-    User currentUser = (User) session.getAttribute("user");
-    String method = request.getParameter("_method");
-    
-    CartManager cartManager = (CartManager) getServletContext().getAttribute("cartManager");
-    
-    if (currentUser != null) {
-        switch(method) {
-            
-        // Call the method to add the product to the cart
-        case "post":
-         
-        //cartManager.addProductToCart(currentUser, sku);
-          break;
-          
-        // Call the method to add the product to the cart 
-        case "delete":
-        //cartManager.removeProductFromCart(currentUser, sku);
-          break;
 
-        }
+        //Session information
+        String sku = request.getParameter("sku");
+
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        String method = request.getParameter("_method");
         
-        
-        // Redirect back to the product details page or any other page as needed
-         response.sendRedirect("Cart");
-    } else {
-        // Handle the case where the user is not logged in
-        response.sendRedirect("login.jsp"); // Redirect to the login page
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+
+        //DB configuration
+        Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
+        String dbUrl = configProps.getProperty("database.url");
+        String dbUser = configProps.getProperty("database.user");
+        String dbPassword = configProps.getProperty("database.password");
+        String dbDriver = configProps.getProperty("database.driver");
+
+        DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
+        DataManager dataManager = new DataManager(dbConnection);
+
+        if (currentUser != null) {
+            switch (method) {
+
+                // Call the method to add the product to the cart
+                case "post":
+
+                    dataManager.addProductToCart(currentUser, sku);
+                    break;
+
+                // Call the method to remove the product to from cart 
+                case "delete":
+                    dataManager.removeProductFromCart(currentUser, sku);
+                    break;
+                    
+                case "put":
+                    dataManager.setProductQuantityInCart(currentUser, sku, quantity);
+                    
+                case "clearCart":
+                    dataManager.clearCart(currentUser);
+
+            }
+
+            Cart currentCart = dataManager.getCart(currentUser);
+            //Cart currentCart = (Cart) currentUser.getCart();
+            if (currentUser.getCart() == null) {
+                currentUser.setCart(currentCart);
+            }
+            List<CartItem> cartItems = currentCart.getCartItems();
+
+            if (cartItems.isEmpty() || currentCart == null) {
+                request.setAttribute("cartEmpty", true);
+            } else {
+                request.setAttribute("cart", cartItems);
+            }
+
+            // Redirect back to the product details page or any other page as needed
+            response.sendRedirect("Cart");
+        } else {
+            // Handle the case where the user is not logged in
+            response.sendRedirect("login.jsp"); // Redirect to the login page
         }
-    
+
     }
 
     /**
@@ -141,21 +170,15 @@ public class CartServlet extends HttpServlet {
     /*Not working*/
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         String sku = request.getParameter("sku");
-    
-    HttpSession session = request.getSession();
-    User currentUser = (User) session.getAttribute("user");
-    
-    CartManager cartManager = (CartManager) getServletContext().getAttribute("cartManager");
-    
-    
-     response.sendRedirect("Home");
-    
-        
+        String sku = request.getParameter("sku");
+
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+
+        response.sendRedirect("Home");
+
     }
-    
-    
-    
+
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
