@@ -110,6 +110,10 @@ public class DataManager {
      *
      * @param sku
      * @param name
+     * @param description
+     * @param vendor
+     * @param urlSlug
+     * @param price
      */
     public void createProduct(String sku, String name, String description, String vendor, String urlSlug, double price) {
 
@@ -618,7 +622,7 @@ public class DataManager {
 
     public List<Order> getOrders(User user) {
         List<Order> orders = new ArrayList<>();
-        String sql = "SELECT order_id, shipping_address, tracking_number, is_shipped FROM ORDERS WHERE user_id = ?";
+        String sql = "SELECT order_id, shipping_address, tracking_number, isShipped FROM ORDERS WHERE user_id = ?";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -630,7 +634,7 @@ public class DataManager {
                 order.setOrderId(rs.getInt("order_id"));
                 order.setShippingAddress(rs.getString("shipping_address"));
                 order.setTrackingNumber(rs.getString("tracking_number"));
-                order.setIsShipped(rs.getBoolean("is_shipped"));
+                order.setIsShipped(rs.getBoolean("isShipped"));
 
                 order.setOrderItems(getOrderItems(order.getOrderId()));
                 orders.add(order);
