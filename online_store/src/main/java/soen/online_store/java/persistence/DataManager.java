@@ -86,13 +86,12 @@ public class DataManager {
 
         return user;
     }
-    
+
     // Define a method to update the isStaff attribute for a user based on password
     public void setUserIsStaff(int userID, boolean isStaff) throws SQLException {
         String sql = "UPDATE USERS SET is_staff = ? WHERE user_id = ?";
 
-        try (Connection conn = dbConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setBoolean(1, isStaff);
             ps.setInt(2, userID);
@@ -112,30 +111,29 @@ public class DataManager {
      * @param sku
      * @param name
      */
-    public void createProduct(String sku, String name, String description, String vendor, String urlSlug, double price)  {
+    public void createProduct(String sku, String name, String description, String vendor, String urlSlug, double price) {
 
-         // Define the SQL query for inserting a new product
-    String sql = "INSERT INTO PRODUCTS (sku, name, description, vendor, urlSlug, price) VALUES (?, ?, ?, ?, ?, ?)";
+        // Define the SQL query for inserting a new product
+        String sql = "INSERT INTO PRODUCTS (sku, name, description, vendor, urlSlug, price) VALUES (?, ?, ?, ?, ?, ?)";
 
-    try (Connection conn = dbConnection.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        // Set the parameters for the SQL query
-        ps.setString(1, sku);
-        ps.setString(2, name);
-        ps.setString(3, description);
-        ps.setString(4, vendor);
-        ps.setString(5, urlSlug);
-        ps.setDouble(6, price);
+            // Set the parameters for the SQL query
+            ps.setString(1, sku);
+            ps.setString(2, name);
+            ps.setString(3, description);
+            ps.setString(4, vendor);
+            ps.setString(5, urlSlug);
+            ps.setDouble(6, price);
 
-        // Execute the insert query
-        int rowsInserted = ps.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("Product inserted successfully!");
-        } else {
-            System.out.println("Product not inserted.");
-        }
-    }   catch (SQLException ex) {
+            // Execute the insert query
+            int rowsInserted = ps.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Product inserted successfully!");
+            } else {
+                System.out.println("Product not inserted.");
+            }
+        } catch (SQLException ex) {
             Logger.getLogger(DataManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -330,6 +328,22 @@ public class DataManager {
         }
     }
 
+    public void createCart(User user) {
+        try (Connection conn = dbConnection.getConnection()) {
+
+            String sql = "INSERT INTO CARTS (user_id) values (?)";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, user.getUserID());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public Cart getCart(User user) {
 
         Cart cart;
@@ -337,7 +351,7 @@ public class DataManager {
         int cartId = -1;
         if (user.getCart() != null) {
             cartId = user.getCart().getCartId();
-            
+
         } else {
 
             try (Connection conn = dbConnection.getConnection()) {
@@ -359,22 +373,22 @@ public class DataManager {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-           
 
         }
-        
-         List<CartItem> cartItems = getCartItems(cartId);
 
-            cart = new Cart(cartId, cartItems);
-            return cart;
-        
+        List<CartItem> cartItems = getCartItems(cartId);
+
+        cart = new Cart(cartId, cartItems);
+        return cart;
+
     }
-        /**
-         * Helper function for getting cartItems in a cart
-         *
-         * @param cartId
-         * @return
-         */
+
+    /**
+     * Helper function for getting cartItems in a cart
+     *
+     * @param cartId
+     * @return
+     */
     private List<CartItem> getCartItems(int cartId) {
 
         List<CartItem> cartItems = new ArrayList<>();
@@ -407,290 +421,292 @@ public class DataManager {
     }
 
 // Function to add a product to the user's cart
-    public void addProductToCart(String username, String sku) {
-        try (Connection conn = dbConnection.getConnection()) {
-            // First, find the user's cart_id
-            String findCartSql = "SELECT cart_id FROM CARTS WHERE user_id = (SELECT user_id FROM USERS WHERE username = ?)";
-            PreparedStatement findCartPs = conn.prepareStatement(findCartSql);
-            findCartPs.setString(1, username);
-            ResultSet cartRs = findCartPs.executeQuery();
+    public void addProductToCart(User user, String sku) {
 
-            // Check if the cart_id is found
-            if (cartRs.next()) {
-                int cartId = cartRs.getInt("cart_id");
+        int cartId = -1;
 
-                // Insert the product into the cart
+        String sql = "SELECT cart_id FROM CARTS WHERE user_id = ?";
+
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            if (user.getCart() != null) {
+                cartId = user.getCart().getCartId();
+
+            } else {
+
+                // First, find the user's cart_id
+                ps.setInt(1, user.getUserID());
+                ResultSet rs = ps.executeQuery();
+
+                // Check if the cart_id is found
+                if (rs.next()) {
+                    cartId = rs.getInt("cart_id");
+
+                }
+            }
+
+            if (isProductInCart(cartId, sku)) {
+
+                sql = "UPDATE CART_ITEMS SET quantity = quantity + 1 WHERE cart_id = ? AND sku = ?";
+                PreparedStatement updatePs = conn.prepareStatement(sql);
+                updatePs.setInt(1, cartId);
+                updatePs.setString(2, sku);
+                updatePs.executeUpdate();
+
+            } else {
+
                 String insertSql = "INSERT INTO CART_ITEMS (cart_id, sku) VALUES (?, ?)";
                 PreparedStatement insertPs = conn.prepareStatement(insertSql);
                 insertPs.setInt(1, cartId);
                 insertPs.setString(2, sku);
                 insertPs.executeUpdate();
-            } else {
-                // Handle the case where the user does not have a cart_id
-                // This might involve creating a new cart or throwing an exception
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isProductInCart(int cartId, String sku) {
+
+        try (Connection conn = dbConnection.getConnection()) {
+            // First, find the user's cart_id
+            String sql = "SELECT * FROM CART_ITEMS WHERE cart_id = ? AND sku = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, cartId);
+            ps.setString(2, sku);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
 // Function to remove a product from the user's cart
-    public void removeProductFromCart(String username, String sku) {
+    public void removeProductFromCart(User user, String sku) {
         try (Connection conn = dbConnection.getConnection()) {
-            // First, find the user's cart_id
-            String findCartSql = "SELECT cart_id FROM CARTS WHERE user_id = (SELECT user_id FROM USERS WHERE username = ?)";
-            PreparedStatement findCartPs = conn.prepareStatement(findCartSql);
-            findCartPs.setString(1, username);
-            ResultSet cartRs = findCartPs.executeQuery();
 
-            // Check if the cart_id is found
-            if (cartRs.next()) {
-                int cartId = cartRs.getInt("cart_id");
+            // Delete the product from the cart
+            String deleteSql = "DELETE FROM CART_ITEMS WHERE cart_id = ? AND sku = ?";
+            PreparedStatement deletePs = conn.prepareStatement(deleteSql);
+            deletePs.setInt(1, user.getCart().getCartId());
+            deletePs.setString(2, sku);
+            deletePs.executeUpdate();
 
-                // Delete the product from the cart
-                String deleteSql = "DELETE FROM CART_ITEMS WHERE cart_id = ? AND sku = ?";
-                PreparedStatement deletePs = conn.prepareStatement(deleteSql);
-                deletePs.setInt(1, cartId);
-                deletePs.setString(2, sku);
-                deletePs.executeUpdate();
-            } else {
-                // Handle the case where the user does not have a cart_id
-                // This could be an exception or a no-op if it's valid for a user not to have a cart
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // Function to set product quantity in the user's cart
-    public void setProductQuantityInCart(String username, String sku, int quantity) {
+// Function to set product quantity in the user's cart
+    public void setProductQuantityInCart(User user, String sku, int quantity) {
+
         try (Connection conn = dbConnection.getConnection()) {
+
+            if (!doesCartExist(user)) {
+
+                createCart(user);
+            }
             // First, find the user's cart_id
-            String findCartSql = "SELECT cart_id FROM CARTS WHERE user_id = (SELECT user_id FROM USERS WHERE username = ?)";
+            String findCartSql = "SELECT cart_id FROM CARTS WHERE user_id = ?";
             PreparedStatement findCartPs = conn.prepareStatement(findCartSql);
-            findCartPs.setString(1, username);
+            findCartPs.setInt(1, user.getUserID());
             ResultSet cartRs = findCartPs.executeQuery();
 
             // Check if the cart_id is found
             if (cartRs.next()) {
+
                 int cartId = cartRs.getInt("cart_id");
 
-                // Check if the product is already in the cart
-                String sqlCheck = "SELECT quantity FROM CART_ITEMS WHERE cart_id = ? AND sku = ?";
-                PreparedStatement psCheck = conn.prepareStatement(sqlCheck);
-                psCheck.setInt(1, cartId);
-                psCheck.setString(2, sku);
-                ResultSet rs = psCheck.executeQuery();
-
                 // If the product is already in the cart, update the quantity
-                if (rs.next()) {
+                if (isProductInCart(cartId, sku)) {
                     String sqlUpdate = "UPDATE CART_ITEMS SET quantity = ? WHERE cart_id = ? AND sku = ?";
                     PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
                     psUpdate.setInt(1, quantity);
                     psUpdate.setInt(2, cartId);
                     psUpdate.setString(3, sku);
                     psUpdate.executeUpdate();
-                } else if (quantity > 0) { // If not in the cart and quantity is greater than zero, add it
-                    addProductToCart(username, sku); // Re-use your existing method adapted to use username
-                    setProductQuantityInCart(username, sku, quantity); // Recursively call to set the quantity
+                } else { // If not in the cart and quantity is greater than zero, add it
+                    addProductToCart(user, sku); // Re-use your existing method adapted to use username
+                    //setProductQuantityInCart(user, sku, quantity); // Recursively call to set the quantity
                 }
-            } else {
-                // Handle the case where the user does not have a cart_id
-                // This could be an exception or a no-op if it's valid for a user not to have a cart
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean doesCartExist(User user) {
+
+        try (Connection conn = dbConnection.getConnection()) {
+            // First, find the user's cart_id
+            String findCartSql = "SELECT cart_id FROM CARTS WHERE user_id = ?";
+            PreparedStatement findCartPs = conn.prepareStatement(findCartSql);
+            findCartPs.setInt(1, user.getUserID());
+            ResultSet cartRs = findCartPs.executeQuery();
+
+            // Check if the cart_id is found
+            if (cartRs.next()) {
+
+                user.setCart(new Cart(cartRs.getInt("cart_id")));
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 // Function to clear the cart for a given user
-    public void clearCart(String username) {
+    public void clearCart(User user) {
         try (Connection conn = dbConnection.getConnection()) {
-            // First, find the user's cart_id
-            String findCartSql = "SELECT cart_id FROM CARTS WHERE user_id = (SELECT user_id FROM USERS WHERE username = ?)";
-            PreparedStatement findCartPs = conn.prepareStatement(findCartSql);
-            findCartPs.setString(1, username);
-            ResultSet cartRs = findCartPs.executeQuery();
 
-            // If the user has a cart, clear it
-            if (cartRs.next()) {
-                int cartId = cartRs.getInt("cart_id");
+            // Delete the cart items for the found cart_id
+            String sqlDelete = "DELETE FROM CART_ITEMS WHERE cart_id = ?";
+            PreparedStatement psDelete = conn.prepareStatement(sqlDelete);
+            psDelete.setInt(1, user.getCart().getCartId());
+            psDelete.executeUpdate();
 
-                // Delete the cart items for the found cart_id
-                String sqlDelete = "DELETE FROM CART_ITEMS WHERE cart_id = ?";
-                PreparedStatement psDelete = conn.prepareStatement(sqlDelete);
-                psDelete.setInt(1, cartId);
-                psDelete.executeUpdate();
-
-                // Optionally, if the entire cart should be removed, not just its items, add:
-                // String sqlDeleteCart = "DELETE FROM CARTS WHERE cart_id = ?";
-                // PreparedStatement psDeleteCart = conn.prepareStatement(sqlDeleteCart);
-                // psDeleteCart.setInt(1, cartId);
-                // psDeleteCart.executeUpdate();
-            }
-            // If no cart exists, no action is taken.
-        } catch (SQLException e) {
+        } // If no cart exists, no action is taken.
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void createOrder(String user, String shippingAddress) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = dbConnection.getConnection();
-            // Start transaction
-            conn.setAutoCommit(false);
+    public void createOrder(User user, String shippingAddress) {
 
-            // Step 1: Retrieve the cart_id
-            String getCartIdSql = "SELECT cart_id FROM CARTS WHERE user_id = (SELECT user_id FROM USERS WHERE username = ?)";
-            ps = conn.prepareStatement(getCartIdSql);
-            ps.setString(1, user);
-            rs = ps.executeQuery();
-            int cartId = -1;
-            if (rs.next()) {
-                cartId = rs.getInt("cart_id");
-            } else {
-                // Handle the case where there is no cart for the user.
-                // For example, throw an exception or return early.
-                conn.rollback(); // Rollback transaction as there's nothing to do
-                return;
-            }
+        //Query String
+        String sql = "INSERT INTO ORDERS (user_id, shipping_address) values(?, ?)";
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
 
-            // Step 2: Insert a new order
-            String insertOrderSql = "INSERT INTO ORDERS (shipping_address, user_id) VALUES (?, (SELECT user_id FROM USERS WHERE username = ?))";
-            ps = conn.prepareStatement(insertOrderSql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, shippingAddress);
-            ps.setString(2, user);
+            //Creating the query object used to execute the query
+            //Resultset is the set of rows returned from the query
             ps.executeUpdate();
-            rs = ps.getGeneratedKeys();
-            int orderId = -1;
-            if (rs.next()) {
-                orderId = rs.getInt(1); // Retrieve the auto generated order_id
+
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int orderId = generatedKeys.getInt(1);
+
+                // Now we have the order ID, we can insert into ORDER_ITEMS
+                //Getting the user's cart
+                user.setCart(getCart(user));
+                for (CartItem item : user.getCart().getCartItems()) {
+                    // Copy cart items to order items
+                    String copyItemsSql = "INSERT INTO ORDER_ITEMS (sku, order_id, quantity) values (?, ?, ?)";
+                    PreparedStatement itemPs = conn.prepareStatement(copyItemsSql);
+                    itemPs.setString(1, item.getProduct().getSKU()); // Set the order ID
+                    itemPs.setInt(2, orderId); // Set the cart ID
+                    itemPs.setInt(3, item.getQuantity());
+                    itemPs.executeUpdate();
+                }
             }
 
-            // Step 3: Copy cart items to order items
-            String copyItemsSql = "INSERT INTO ORDER_ITEMS (sku, order_id, quantity) SELECT sku, ?, quantity FROM CART_ITEMS WHERE cart_id = ?";
-            ps = conn.prepareStatement(copyItemsSql);
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+
+        }
+
+    }
+
+    public List<Order> getOrders(User user) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT order_id, shipping_address, tracking_number, is_shipped FROM ORDERS WHERE user_id = ?";
+
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, user.getUserID());
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setShippingAddress(rs.getString("shipping_address"));
+                order.setTrackingNumber(rs.getString("tracking_number"));
+                order.setIsShipped(rs.getBoolean("is_shipped"));
+
+                order.setOrderItems(getOrderItems(order.getOrderId()));
+                orders.add(order);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return orders;
+    }
+
+    private List<OrderItem> getOrderItems(int orderId) {
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        String sql = "SELECT order_id, quantity, sku FROM ORDER_ITEMS WHERE order_id = ?";
+
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, orderId);
-            ps.setInt(2, cartId);
-            ps.executeUpdate();
+            ResultSet rs = ps.executeQuery();
 
-            // Commit transaction
-            conn.commit();
+            while (rs.next()) {
+
+                int quantity = rs.getInt("quantity");
+                String sku = rs.getString("sku");
+
+                Product p = getProduct(sku);
+
+                orderItems.add(new OrderItem(p, quantity));
+            }
+
         } catch (SQLException e) {
-            if (conn != null) {
-                try {
-                    conn.rollback(); // Rollback on error
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
+
             e.printStackTrace();
-        } finally {
-            // Clean up resources
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (conn != null) {
-                    conn.setAutoCommit(true); // Reset auto-commit to default
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+
         }
+
+        return orderItems;
     }
 
-//    public List<Order> getOrders(int userId) {
-//        List<Order> orders = new ArrayList<>();
-//        String sql = "SELECT order_id, shipping_address, tracking_number, is_shipped FROM ORDERS WHERE user_id = ?";
-//
-//        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-//
-//            ps.setInt(1, userId);
-//            ResultSet rs = ps.executeQuery();
-//
-//            while (rs.next()) {
-//                Order order = new Order();
-//                order.setOrderId(rs.getInt("order_id"));
-//                order.setShippingAddress(rs.getString("shipping_address"));
-//                order.setTrackingNumber(rs.getString("tracking_number"));
-//                order.setShipped(rs.getBoolean("is_shipped"));
-//
-//                orders.add(order);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return orders;
-//    }
-//    public Order getOrder(String user, int orderId) throws SQLException {
-//        Order order = null;
-//        try (Connection conn = dbConnection.getConnection()) {
-//            String sql;
-//
-//            if (user != null && !user.isEmpty()) {
-//                // SQL to check that the order belongs to the user
-//                sql = "SELECT * FROM ORDERS o "
-//                        + "JOIN ORDER_ITEMS oi ON o.order_id = oi.order_id "
-//                        + "WHERE o.order_id = ? AND o.user_id = (SELECT user_id FROM USERS WHERE username = ?)";
-//            } else {
-//                // SQL to just retrieve the order without checking the user
-//                sql = "SELECT * FROM ORDERS o "
-//                        + "JOIN ORDER_ITEMS oi ON o.order_id = oi.order_id "
-//                        + "WHERE o.order_id = ?";
-//            }
-//
-//            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-//                ps.setInt(1, orderId);
-//
-//                if (user != null && !user.isEmpty()) {
-//                    ps.setString(2, user);
-//                }
-//
-//                try (ResultSet rs = ps.executeQuery()) {
-//                    while (rs.next()) {
-//                        if (order == null) {
-//                            order = new Order();
-//                            order.setOrderId(rs.getInt("order_id"));
-//                            order.setShippingAddress(rs.getString("shipping_address"));
-//                            order.setTrackingNumber(rs.getString("tracking_number"));
-//                        }
-//
-//                        OrderItem item = new OrderItem();
-//                        item.setSku(rs.getString("sku"));
-//                        item.setQuantity(rs.getInt("quantity"));
-//
-//                        order.addItem(item);
-//                    }
-//                }
-//            }
-//        }
-//
-//        if (order == null && user != null && !user.isEmpty()) {
-//            // If no order was found and a username was provided, throw an exception
-//            throw new SQLException("Order not found or does not belong to the user");
-//        }
-//
-//        return order;
-//    }
+    public Order getOrder(int orderId) throws SQLException {
+        Order order = null;
+        String sql = "SELECT order_id, shipping_address, tracking_number, is_shipped FROM ORDERS WHERE order_id = ?";
+
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setShippingAddress(rs.getString("shipping_address"));
+                order.setTrackingNumber(rs.getString("tracking_number"));
+                order.setIsShipped(rs.getBoolean("is_shipped"));
+
+                order.setOrderItems(getOrderItems(order.getOrderId()));
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+
+        }
+
+        return order;
+    }
+
     public void shipOrder(int orderId, String trackingNumber) throws SQLException {
         // SQL to update the tracking number and is_shipped status
-        String sqlUpdateOrder = "UPDATE ORDERS SET tracking_number = ?, is_shipped = TRUE WHERE order_id = ? AND is_shipped = FALSE";
+        String sqlUpdateOrder = "UPDATE ORDERS SET tracking_number = UUID(), is_shipped = TRUE WHERE order_id = ? AND is_shipped = FALSE";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement psUpdateOrder = conn.prepareStatement(sqlUpdateOrder)) {
 
-            // Set the tracking number
-            psUpdateOrder.setString(1, trackingNumber);
             // Set the order ID
-            psUpdateOrder.setInt(2, orderId);
+            psUpdateOrder.setInt(1, orderId);
 
             int rowsAffected = psUpdateOrder.executeUpdate();
             if (rowsAffected == 0) {
