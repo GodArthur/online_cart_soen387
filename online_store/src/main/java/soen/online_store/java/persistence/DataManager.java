@@ -237,35 +237,50 @@ public class DataManager {
         }
     }
 
+    public Cart getCart(User user) {
+        
+        Cart cart;
+        int cartId = user.getCart().getCartId();
+        List<CartItem> cartItems= getCartItems(cartId);
+        
+        cart = new Cart(cartId, cartItems);
+        return cart;
+    }
 
-   
-    public List<Product> getCart(String user) {
-        List<Product> cartProducts = new ArrayList<>();
+    /**
+     * Helper function for getting cartItems in a cart
+     * @param cartId
+     * @return 
+     */
+    private List<CartItem> getCartItems(int cartId) {
+
+        List<CartItem> cartItems = new ArrayList<>();
+      
         try (Connection conn = dbConnection.getConnection()) {
-            String sql = "SELECT p.* FROM PRODUCTS p "
-                    + "JOIN CART_ITEMS ci ON p.sku = ci.sku "
-                    + "JOIN CARTS c ON ci.cart_id = c.cart_id "
-                    + "JOIN USERS u ON c.user_id = u.user_id "
-                    + "WHERE u.username = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, user);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                // Assuming the Product constructor takes the following parameters: name, description, vendor, urlSlug, sku, price
-                String name = rs.getString("name");
-                String description = rs.getString("description");
-                String vendor = rs.getString("vendor");
-                String urlSlug = rs.getString("urlSlug");
-                String sku = rs.getString("sku");
-                double price = rs.getDouble("price");
 
-                Product product = new Product(name, description, vendor, urlSlug, sku, price);
-                cartProducts.add(product);
-            }
+            String sql = "SELECT sku, cart_id, quantity FROM CART_ITEMS"
+                    + " WHERE cart_id = ?";
+            
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, cartId);
+            
+           ResultSet rs = ps.executeQuery();
+           
+           while(rs.next()){
+              
+              //Getting product by sku that corresponds to this cart item
+              Product p = getProduct(rs.getString("sku"));
+              int quantity = rs.getInt("quantity");
+              
+              cartItems.add(new CartItem(p, quantity));
+           }
+           
+           return cartItems;   
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return cartProducts;
+        return cartItems;
     }
 
 // Function to add a product to the user's cart
