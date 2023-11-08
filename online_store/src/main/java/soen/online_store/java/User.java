@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class User {
 
-    private String userID;
+    private int userID;
     private String username;
     private String password;
     private String firstName;
@@ -17,7 +17,7 @@ public class User {
     private boolean isStaff;
    
 
-    public User(String userID, String username, String password, String firstName, String lastName, boolean isStaff, Cart cart, List<Order> orders) {
+    public User(int userID, String username, String password, String firstName, String lastName, boolean isStaff, Cart cart, List<Order> orders) {
         this.userID = userID;
         this.username = username;
         this.password = password;
@@ -29,11 +29,11 @@ public class User {
         
     }
 
-    public String getUserID() {
+    public int getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
+    public void setUserID(int userID) {
         this.userID = userID;
     }
 

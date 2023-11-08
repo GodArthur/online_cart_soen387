@@ -35,19 +35,19 @@ public class InitializationContextListener implements ServletContextListener {
 
     private void initializeManagement(ServletContextEvent sce) {
 
-        List<Product> products = new ArrayList<>();
-        products.add(new Product("Blender", "High-speed countertop blender for smoothies and shakes", "KitchenTech", "blender-speedmaster", "SKU401", 59.99));
-        products.add(new Product("Bicycle Helmet", "Adjustable helmet suitable for adults, safety-certified", "RideSafe", "helmet-adult", "SKU402", 24.49));
-        products.add(new Product("Cotton Bath Towel", "Soft and absorbent cotton bath towel in beige", "HomeComforts", "towel-bath-beige", "SKU403", 12.99));
-        products.add(new Product("Wireless Mouse", "Ergonomic wireless mouse with USB receiver", "TechGear", "mouse-wireless", "SKU404", 18.99));
-        products.add(new Product("Garden Chair", "Foldable garden chair with armrests, green", "OutdoorLife", "chair-garden-green", "SKU405", 19.49));
-
-        ProductManager productManager = new ProductManager(products);
-        CartManager cartManager = new CartManager(productManager);
-        
-        // Store the products list in the application context so it can be accessed across the application
-        sce.getServletContext().setAttribute("productManger", productManager);
-        sce.getServletContext().setAttribute("cartManager", cartManager);
+//        List<Product> products = new ArrayList<>();
+//        products.add(new Product("Blender", "High-speed countertop blender for smoothies and shakes", "KitchenTech", "blender-speedmaster", "SKU401", 59.99));
+//        products.add(new Product("Bicycle Helmet", "Adjustable helmet suitable for adults, safety-certified", "RideSafe", "helmet-adult", "SKU402", 24.49));
+//        products.add(new Product("Cotton Bath Towel", "Soft and absorbent cotton bath towel in beige", "HomeComforts", "towel-bath-beige", "SKU403", 12.99));
+//        products.add(new Product("Wireless Mouse", "Ergonomic wireless mouse with USB receiver", "TechGear", "mouse-wireless", "SKU404", 18.99));
+//        products.add(new Product("Garden Chair", "Foldable garden chair with armrests, green", "OutdoorLife", "chair-garden-green", "SKU405", 19.49));
+//
+//        ProductManager productManager = new ProductManager(products);
+//        CartManager cartManager = new CartManager(productManager);
+//        
+//        // Store the products list in the application context so it can be accessed across the application
+//        sce.getServletContext().setAttribute("productManger", productManager);
+//        sce.getServletContext().setAttribute("cartManager", cartManager);
     }
 
     private void initializeUsers(ServletContextEvent sce) {
