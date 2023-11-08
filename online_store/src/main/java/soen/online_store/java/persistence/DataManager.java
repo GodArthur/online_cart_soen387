@@ -86,6 +86,25 @@ public class DataManager {
 
         return user;
     }
+    
+    // Define a method to update the isStaff attribute for a user based on password
+    public void setUserIsStaff(int userID, boolean isStaff) throws SQLException {
+        String sql = "UPDATE USERS SET is_staff = ? WHERE user_id = ?";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setBoolean(1, isStaff);
+            ps.setInt(2, userID);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("User's isStaff updated successfully!");
+            } else {
+                System.out.println("User with userID " + userID + " not found.");
+            }
+        }
+    }
 
     /**
      * Function creates products
