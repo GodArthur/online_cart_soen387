@@ -105,7 +105,11 @@ public class CartServlet extends HttpServlet {
         User currentUser = (User) session.getAttribute("user");
         String method = request.getParameter("_method");
         
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        int quantity = 0;
+        if (request.getParameter("quantity") != null){
+        quantity = Integer.parseInt(request.getParameter("quantity"));
+
+        }
 
         //DB configuration
         Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
