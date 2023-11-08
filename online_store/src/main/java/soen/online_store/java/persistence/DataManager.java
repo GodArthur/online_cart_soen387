@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -91,17 +93,31 @@ public class DataManager {
      * @param sku
      * @param name
      */
-    public void createProduct(String sku, String name) {
+    public void createProduct(String sku, String name, String description, String vendor, String urlSlug, double price)  {
 
-        try (Connection conn = dbConnection.getConnection()) {
+         // Define the SQL query for inserting a new product
+    String sql = "INSERT INTO PRODUCTS (sku, name, description, vendor, urlSlug, price) VALUES (?, ?, ?, ?, ?, ?)";
 
-            String sql = "INSERT INTO PRODUCTS (sku, name) VALUES (?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, sku);
-            ps.setString(2, name);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    try (Connection conn = dbConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        // Set the parameters for the SQL query
+        ps.setString(1, sku);
+        ps.setString(2, name);
+        ps.setString(3, description);
+        ps.setString(4, vendor);
+        ps.setString(5, urlSlug);
+        ps.setDouble(6, price);
+
+        // Execute the insert query
+        int rowsInserted = ps.executeUpdate();
+        if (rowsInserted > 0) {
+            System.out.println("Product inserted successfully!");
+        } else {
+            System.out.println("Product not inserted.");
+        }
+    }   catch (SQLException ex) {
+            Logger.getLogger(DataManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

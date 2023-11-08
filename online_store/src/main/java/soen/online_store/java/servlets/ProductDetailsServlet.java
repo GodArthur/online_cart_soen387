@@ -7,8 +7,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import soen.online_store.java.Product;
 import soen.online_store.java.User;
 import soen.online_store.java.action.ProductManager;
@@ -112,11 +115,39 @@ public class ProductDetailsServlet extends HttpServlet {
         String sku = request.getParameter("sku");
         double price = Double.parseDouble(request.getParameter("price")); // Parse price as double
         
-        ProductManager productManager = (ProductManager) getServletContext().getAttribute("productManger");
-        productManager.updateProduct(sku, name, description, vendor, urlSlug, price);
-        // Update the ServletContext attribute with the updated product manager (not necessary in this case)
-        getServletContext().setAttribute("productManger", productManager);
-        response.sendRedirect(request.getContextPath() + "/product-details?slug=" + urlSlug );
+         // Establish a database connection
+            Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
+            String dbUrl = configProps.getProperty("database.url");
+            String dbUser = configProps.getProperty("database.user");
+            String dbPassword = configProps.getProperty("database.password");
+            String dbDriver = configProps.getProperty("database.driver");
+
+            DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
+            DataManager dataManager = new DataManager(dbConnection);
+
+    try {
+        // Update the product in the database
+        dataManager.updateProduct(sku, name, description, vendor, urlSlug, price);
+
+        // Redirect to the product details page after the update
+        response.sendRedirect(request.getContextPath() + "/product-details?slug=" + urlSlug);
+    } catch (SQLException e) {
+        // Handle any database update errors here
+        e.printStackTrace(); // You can log the error or display an error message to the user
+        // Redirect to an error page or display an error message to the user
+        
+        response.sendRedirect(request.getContextPath() + "/error-page.jsp");
+    }
+
+        
+        
+        
+        
+//        ProductManager productManager = (ProductManager) getServletContext().getAttribute("productManger");
+//        productManager.updateProduct(sku, name, description, vendor, urlSlug, price);
+//        // Update the ServletContext attribute with the updated product manager (not necessary in this case)
+//        getServletContext().setAttribute("productManger", productManager);
+//        response.sendRedirect(request.getContextPath() + "/product-details?slug=" + urlSlug );
         
         
         
