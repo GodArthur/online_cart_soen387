@@ -7,8 +7,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import soen.online_store.java.User;
+import soen.online_store.java.persistence.DataManager;
+import soen.online_store.java.persistence.DatabaseConnection;
 
 /**
  *
@@ -63,15 +69,33 @@ public class StaffPasswordServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
-        boolean OriginalUserStatus = currentUser.isIsStaff();
+        
+         // Establish a database connection
+            Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
+            String dbUrl = configProps.getProperty("database.url");
+            String dbUser = configProps.getProperty("database.user");
+            String dbPassword = configProps.getProperty("database.password");
+            String dbDriver = configProps.getProperty("database.driver");
+
+            DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
+            DataManager dataManager = new DataManager(dbConnection);
         
         if (currentUser != null) {
             if ("MagicIn".equals(password)) {
-                currentUser.setIsStaff(true);
+                try {
+                    dataManager.setUserIsStaff(currentUser.getUserID(), true);
+                    currentUser.setIsStaff(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(StaffPasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else if ("MagicOut".equals(password)) {
-                currentUser.setIsStaff(false);
+                try {
+                    dataManager.setUserIsStaff(currentUser.getUserID(), false);
+                    currentUser.setIsStaff(false);
+                } catch (SQLException ex) {
+                    Logger.getLogger(StaffPasswordServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            
             
         // just trying to track change in user staff stattus  
         //not implemented
