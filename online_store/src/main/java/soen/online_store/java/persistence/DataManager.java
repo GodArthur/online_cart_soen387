@@ -111,6 +111,10 @@ public class DataManager {
      *
      * @param sku
      * @param name
+     * @param description
+     * @param vendor
+     * @param urlSlug
+     * @param price
      */
     public void createProduct(String sku, String name, String description, String vendor, String urlSlug, double price)  {
 
