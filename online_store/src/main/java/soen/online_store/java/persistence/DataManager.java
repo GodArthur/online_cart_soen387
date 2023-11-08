@@ -534,7 +534,7 @@ public class DataManager {
                     psUpdate.executeUpdate();
                 } else { // If not in the cart and quantity is greater than zero, add it
                     addProductToCart(user, sku); // Re-use your existing method adapted to use username
-                    setProductQuantityInCart(user, sku, quantity); // Recursively call to set the quantity
+                    //setProductQuantityInCart(user, sku, quantity); // Recursively call to set the quantity
                 }
             }
         } catch (SQLException e) {
@@ -677,7 +677,7 @@ public class DataManager {
         String sql = "SELECT order_id, shipping_address, tracking_number, is_shipped FROM ORDERS WHERE order_id = ?";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
+            
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
 

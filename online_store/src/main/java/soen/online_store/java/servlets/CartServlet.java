@@ -104,6 +104,8 @@ public class CartServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
         String method = request.getParameter("_method");
+        
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
 
         //DB configuration
         Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
@@ -128,6 +130,12 @@ public class CartServlet extends HttpServlet {
                 case "delete":
                     dataManager.removeProductFromCart(currentUser, sku);
                     break;
+                    
+                case "put":
+                    dataManager.setProductQuantityInCart(currentUser, sku, quantity);
+                    
+                case "clearCart":
+                    dataManager.clearCart(currentUser);
 
             }
 
