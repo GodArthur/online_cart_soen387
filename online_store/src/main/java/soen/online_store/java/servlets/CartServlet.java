@@ -137,6 +137,7 @@ public class CartServlet extends HttpServlet {
                     
                 case "put":
                     dataManager.setProductQuantityInCart(currentUser, sku, quantity);
+                    break;
                     
                 case "clearCart":
                     dataManager.clearCart(currentUser);

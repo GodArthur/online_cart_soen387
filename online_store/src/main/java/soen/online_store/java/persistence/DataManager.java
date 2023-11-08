@@ -512,9 +512,7 @@ public class DataManager {
     public void setProductQuantityInCart(User user, String sku, int quantity) {
 
         try (Connection conn = dbConnection.getConnection()) {
-
             if (!doesCartExist(user)) {
-
                 createCart(user);
             }
             // First, find the user's cart_id
@@ -525,21 +523,16 @@ public class DataManager {
 
             // Check if the cart_id is found
             if (cartRs.next()) {
-
                 int cartId = cartRs.getInt("cart_id");
 
-                // If the product is already in the cart, update the quantity
-                if (isProductInCart(cartId, sku)) {
-                    String sqlUpdate = "UPDATE CART_ITEMS SET quantity = ? WHERE cart_id = ? AND sku = ?";
-                    PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
-                    psUpdate.setInt(1, quantity);
-                    psUpdate.setInt(2, cartId);
-                    psUpdate.setString(3, sku);
-                    psUpdate.executeUpdate();
-                } else { // If not in the cart and quantity is greater than zero, add it
-                    addProductToCart(user, sku); // Re-use your existing method adapted to use username
-                    //setProductQuantityInCart(user, sku, quantity); // Recursively call to set the quantity
-                }
+                System.out.println("PRODUCT IS IN CART. PREPARING UPDATE");
+                String sqlUpdate = "UPDATE CART_ITEMS SET quantity = ? WHERE cart_id = ? AND sku = ?";
+                PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
+                psUpdate.setInt(1, quantity);
+                psUpdate.setInt(2, cartId);
+                psUpdate.setString(3, sku);
+                psUpdate.executeUpdate();
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -681,7 +674,7 @@ public class DataManager {
         String sql = "SELECT order_id, shipping_address, tracking_number, is_shipped FROM ORDERS WHERE order_id = ?";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
 
