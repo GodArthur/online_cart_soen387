@@ -26,6 +26,64 @@ public class DataManager {
         this.dbConnection = dbConnection;
 
     }
+    
+    // Method to retrieve a user by username and password from the database
+  public User getUserByUsernameAndPassword(String username, String password) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        User user = null;
+
+        try {
+            // Get a database connection
+            connection = dbConnection.getConnection();
+
+            // Create a SQL query to check the username and password
+            String query = "SELECT * FROM USERS WHERE username = ? AND password = ?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+
+            // Execute the query
+            resultSet = preparedStatement.executeQuery();
+
+            // Check if a user with the provided username and password exists
+            if (resultSet.next()) {
+                // Create a User object with the retrieved data
+                user = new User(
+                    resultSet.getString("user_id"),
+                    resultSet.getString("username"),
+                    resultSet.getString("password"),
+                    resultSet.getString("firstname"),
+                    resultSet.getString("lastname"),
+                    resultSet.getBoolean("is_staff"),
+                    // You can pass null for cart and orders, as these may be loaded separately
+                    null,
+                    null
+                );
+                // Add more user attributes as needed
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close database resources
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return user;
+    }
 
     /**
      * Function creates products
@@ -484,81 +542,81 @@ public class DataManager {
         }
     }
 
-    public List<Order> getOrders(int userId) {
-        List<Order> orders = new ArrayList<>();
-        String sql = "SELECT order_id, shipping_address, tracking_number, is_shipped FROM ORDERS WHERE user_id = ?";
+//    public List<Order> getOrders(int userId) {
+//        List<Order> orders = new ArrayList<>();
+//        String sql = "SELECT order_id, shipping_address, tracking_number, is_shipped FROM ORDERS WHERE user_id = ?";
+//
+//        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+//
+//            ps.setInt(1, userId);
+//            ResultSet rs = ps.executeQuery();
+//
+//            while (rs.next()) {
+//                Order order = new Order();
+//                order.setOrderId(rs.getInt("order_id"));
+//                order.setShippingAddress(rs.getString("shipping_address"));
+//                order.setTrackingNumber(rs.getString("tracking_number"));
+//                order.setShipped(rs.getBoolean("is_shipped"));
+//
+//                orders.add(order);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return orders;
+//    }
 
-        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Order order = new Order();
-                order.setOrderId(rs.getInt("order_id"));
-                order.setShippingAddress(rs.getString("shipping_address"));
-                order.setTrackingNumber(rs.getString("tracking_number"));
-                order.setShipped(rs.getBoolean("is_shipped"));
-
-                orders.add(order);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return orders;
-    }
-
-    public Order getOrder(String user, int orderId) throws SQLException {
-        Order order = null;
-        try (Connection conn = dbConnection.getConnection()) {
-            String sql;
-
-            if (user != null && !user.isEmpty()) {
-                // SQL to check that the order belongs to the user
-                sql = "SELECT * FROM ORDERS o "
-                        + "JOIN ORDER_ITEMS oi ON o.order_id = oi.order_id "
-                        + "WHERE o.order_id = ? AND o.user_id = (SELECT user_id FROM USERS WHERE username = ?)";
-            } else {
-                // SQL to just retrieve the order without checking the user
-                sql = "SELECT * FROM ORDERS o "
-                        + "JOIN ORDER_ITEMS oi ON o.order_id = oi.order_id "
-                        + "WHERE o.order_id = ?";
-            }
-
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setInt(1, orderId);
-
-                if (user != null && !user.isEmpty()) {
-                    ps.setString(2, user);
-                }
-
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        if (order == null) {
-                            order = new Order();
-                            order.setOrderId(rs.getInt("order_id"));
-                            order.setShippingAddress(rs.getString("shipping_address"));
-                            order.setTrackingNumber(rs.getString("tracking_number"));
-                        }
-
-                        OrderItem item = new OrderItem();
-                        item.setSku(rs.getString("sku"));
-                        item.setQuantity(rs.getInt("quantity"));
-
-                        order.addItem(item);
-                    }
-                }
-            }
-        }
-
-        if (order == null && user != null && !user.isEmpty()) {
-            // If no order was found and a username was provided, throw an exception
-            throw new SQLException("Order not found or does not belong to the user");
-        }
-
-        return order;
-    }
+//    public Order getOrder(String user, int orderId) throws SQLException {
+//        Order order = null;
+//        try (Connection conn = dbConnection.getConnection()) {
+//            String sql;
+//
+//            if (user != null && !user.isEmpty()) {
+//                // SQL to check that the order belongs to the user
+//                sql = "SELECT * FROM ORDERS o "
+//                        + "JOIN ORDER_ITEMS oi ON o.order_id = oi.order_id "
+//                        + "WHERE o.order_id = ? AND o.user_id = (SELECT user_id FROM USERS WHERE username = ?)";
+//            } else {
+//                // SQL to just retrieve the order without checking the user
+//                sql = "SELECT * FROM ORDERS o "
+//                        + "JOIN ORDER_ITEMS oi ON o.order_id = oi.order_id "
+//                        + "WHERE o.order_id = ?";
+//            }
+//
+//            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+//                ps.setInt(1, orderId);
+//
+//                if (user != null && !user.isEmpty()) {
+//                    ps.setString(2, user);
+//                }
+//
+//                try (ResultSet rs = ps.executeQuery()) {
+//                    while (rs.next()) {
+//                        if (order == null) {
+//                            order = new Order();
+//                            order.setOrderId(rs.getInt("order_id"));
+//                            order.setShippingAddress(rs.getString("shipping_address"));
+//                            order.setTrackingNumber(rs.getString("tracking_number"));
+//                        }
+//
+//                        OrderItem item = new OrderItem();
+//                        item.setSku(rs.getString("sku"));
+//                        item.setQuantity(rs.getInt("quantity"));
+//
+//                        order.addItem(item);
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (order == null && user != null && !user.isEmpty()) {
+//            // If no order was found and a username was provided, throw an exception
+//            throw new SQLException("Order not found or does not belong to the user");
+//        }
+//
+//        return order;
+//    }
 
     public void shipOrder(int orderId, String trackingNumber) throws SQLException {
         // SQL to update the tracking number and is_shipped status

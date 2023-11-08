@@ -66,7 +66,7 @@ public class LogoutServlet extends HttpServlet {
         request.getSession().setAttribute("logoutMessage", "You are logged out");
         
         // Redirect the user to the home page
-        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        response.sendRedirect(request.getContextPath() + "/Home");
     }
     
 
