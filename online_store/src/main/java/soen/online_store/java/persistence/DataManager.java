@@ -26,9 +26,9 @@ public class DataManager {
         this.dbConnection = dbConnection;
 
     }
-    
+
     // Method to retrieve a user by username and password from the database
-  public User getUserByUsernameAndPassword(String username, String password) {
+    public User getUserByUsernameAndPassword(String username, String password) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -51,15 +51,15 @@ public class DataManager {
             if (resultSet.next()) {
                 // Create a User object with the retrieved data
                 user = new User(
-                    resultSet.getString("user_id"),
-                    resultSet.getString("username"),
-                    resultSet.getString("password"),
-                    resultSet.getString("firstname"),
-                    resultSet.getString("lastname"),
-                    resultSet.getBoolean("is_staff"),
-                    // You can pass null for cart and orders, as these may be loaded separately
-                    null,
-                    null
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("firstname"),
+                        resultSet.getString("lastname"),
+                        resultSet.getBoolean("is_staff"),
+                        // You can pass null for cart and orders, as these may be loaded separately
+                        null,
+                        null
                 );
                 // Add more user attributes as needed
             }
@@ -296,44 +296,74 @@ public class DataManager {
     }
 
     public Cart getCart(User user) {
-        
-        Cart cart;
-        int cartId = user.getCart().getCartId();
-        List<CartItem> cartItems= getCartItems(cartId);
-        
-        cart = new Cart(cartId, cartItems);
-        return cart;
-    }
 
-    /**
-     * Helper function for getting cartItems in a cart
-     * @param cartId
-     * @return 
-     */
+        Cart cart;
+
+        int cartId = -1;
+        if (user.getCart() != null) {
+            cartId = user.getCart().getCartId();
+            
+        } else {
+
+            try (Connection conn = dbConnection.getConnection()) {
+
+                String sql = "SELECT cart_id FROM USERS "
+                        + "INNER JOIN CARTS using(user_id)"
+                        + "WHERE user_id = ?";
+
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setInt(1, user.getUserID());
+
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+
+                    cartId = rs.getInt("cart_id");
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+           
+
+        }
+        
+         List<CartItem> cartItems = getCartItems(cartId);
+
+            cart = new Cart(cartId, cartItems);
+            return cart;
+        
+    }
+        /**
+         * Helper function for getting cartItems in a cart
+         *
+         * @param cartId
+         * @return
+         */
     private List<CartItem> getCartItems(int cartId) {
 
         List<CartItem> cartItems = new ArrayList<>();
-      
+
         try (Connection conn = dbConnection.getConnection()) {
 
             String sql = "SELECT sku, cart_id, quantity FROM CART_ITEMS"
                     + " WHERE cart_id = ?";
-            
+
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, cartId);
-            
-           ResultSet rs = ps.executeQuery();
-           
-           while(rs.next()){
-              
-              //Getting product by sku that corresponds to this cart item
-              Product p = getProduct(rs.getString("sku"));
-              int quantity = rs.getInt("quantity");
-              
-              cartItems.add(new CartItem(p, quantity));
-           }
-           
-           return cartItems;   
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                //Getting product by sku that corresponds to this cart item
+                Product p = getProduct(rs.getString("sku"));
+                int quantity = rs.getInt("quantity");
+
+                cartItems.add(new CartItem(p, quantity));
+            }
+
+            return cartItems;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -566,7 +596,6 @@ public class DataManager {
 //
 //        return orders;
 //    }
-
 //    public Order getOrder(String user, int orderId) throws SQLException {
 //        Order order = null;
 //        try (Connection conn = dbConnection.getConnection()) {
@@ -617,7 +646,6 @@ public class DataManager {
 //
 //        return order;
 //    }
-
     public void shipOrder(int orderId, String trackingNumber) throws SQLException {
         // SQL to update the tracking number and is_shipped status
         String sqlUpdateOrder = "UPDATE ORDERS SET tracking_number = ?, is_shipped = TRUE WHERE order_id = ? AND is_shipped = FALSE";

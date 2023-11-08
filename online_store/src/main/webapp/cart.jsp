@@ -91,15 +91,15 @@
                                     <th>Description</th>
                                     <th>Price</th>
                                 </tr>
-                                <c:forEach items="${cart}" var="product">
+                                <c:forEach items="${cart}" var="cartItem">
                                     <tr>
-                                       <td> <a href="product-details?slug=${product.URLSlug}">${product.name}</a></td>
-                                        <td>${product.description}</td>
-                                        <td>${product.price}</td>
+                                       <td> <a href="product-details?slug=${cartItem.product.URLSlug}">${cartItemproduct.name}</a></td>
+                                        <td>${cartItem.product.description}</td>
+                                        <td>${cartItem.product.price}</td>
                                         <td>
                                             <form action="Cart" method="post">
                                                 <input type="hidden" name="_method" value="delete">
-                                                <input type="hidden" name="sku" value="${product.SKU}">
+                                                <input type="hidden" name="sku" value="${cartItem.product.SKU}">
                                                 <button type="submit" class="btn btn-danger">Remove From Cart</button>
                                             </form>
                                         </td>

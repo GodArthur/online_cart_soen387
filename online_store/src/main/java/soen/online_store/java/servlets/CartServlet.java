@@ -8,10 +8,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Properties;
 import soen.online_store.java.Cart;
+import soen.online_store.java.CartItem;
 import soen.online_store.java.Product;
 import soen.online_store.java.User;
 import soen.online_store.java.action.CartManager;
+import soen.online_store.java.persistence.DataManager;
+import soen.online_store.java.persistence.DatabaseConnection;
 
 /**
  *
@@ -55,17 +59,28 @@ public class CartServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/Login"); // Replace "Login" with the URL of your login page
         return; // Terminate the servlet to prevent further processing
     }
+        Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
+        String dbUrl = configProps.getProperty("database.url");
+        String dbUser = configProps.getProperty("database.user");
+        String dbPassword = configProps.getProperty("database.password");
+        String dbDriver = configProps.getProperty("database.driver");
+        
+        DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
+        DataManager dataManager = new DataManager(dbConnection);
+        
+        Cart currentCart = dataManager.getCart(currentUser);
+        //Cart currentCart = (Cart) currentUser.getCart();
+        if(currentUser.getCart() == null){
+        currentUser.setCart(currentCart);
+        }
+        List<CartItem> cartItems = currentCart.getCartItems();
         
         
-        Cart currentCart = (Cart) currentUser.getCart();
-        List<Product> products = currentCart.getProducts();
         
-        
-        
-        if (products.isEmpty()) {
+        if (cartItems.isEmpty() || currentCart == null) {
              request.setAttribute("cartEmpty", true);
         } else {
-            request.setAttribute("cart", products);
+            request.setAttribute("cart", cartItems);
         }
 
         request.getRequestDispatcher("/cart.jsp").forward(request, response);
@@ -97,12 +112,12 @@ public class CartServlet extends HttpServlet {
         // Call the method to add the product to the cart
         case "post":
          
-        cartManager.addProductToCart(currentUser, sku);
+        //cartManager.addProductToCart(currentUser, sku);
           break;
           
         // Call the method to add the product to the cart 
         case "delete":
-        cartManager.removeProductFromCart(currentUser, sku);
+        //cartManager.removeProductFromCart(currentUser, sku);
           break;
 
         }
