@@ -61,6 +61,14 @@ public class Order {
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
+
+    public boolean isIsShipped() {
+        return isShipped;
+    }
+
+    public void setIsShipped(boolean isShipped) {
+        this.isShipped = isShipped;
+    }
    
     
     
