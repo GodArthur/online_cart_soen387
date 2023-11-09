@@ -10,9 +10,12 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import soen.online_store.java.Cart;
 import soen.online_store.java.CartItem;
 import soen.online_store.java.Order;
+import soen.online_store.java.OrderItem;
 import soen.online_store.java.Product;
 import soen.online_store.java.User;
 import soen.online_store.java.action.CartManager;
@@ -23,8 +26,8 @@ import soen.online_store.java.persistence.DatabaseConnection;
  *
  * @author Djamal
  */
-@WebServlet(name = "OrdersServlet", urlPatterns = {"/orders"})
-public class OrdersServlet extends HttpServlet {
+@WebServlet(name = "OrderDetailsServlet", urlPatterns = {"/orders/*"})
+public class OrderDetailsServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -53,7 +56,7 @@ public class OrdersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
         
         // Establish a database connection
@@ -66,21 +69,38 @@ public class OrdersServlet extends HttpServlet {
             DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
             DataManager dataManager = new DataManager(dbConnection);
         
-        if (currentUser != null) {
-            List<Order> orders = dataManager.getOrders(currentUser);
-            // Set the orders as an attribute in the request
-            request.setAttribute("orders", orders);
-            // Forward the request to the "orders.jsp" page
-            request.getRequestDispatcher("/orders.jsp").forward(request, response);
-        } else {
-            // Redirect to the login page if the user is not logged in
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
-        }
+        
+    // Get the order ID from the URL path
+    String pathInfo = request.getPathInfo();
+    if (pathInfo != null && pathInfo.length() > 1) {
+        String orderIdString = pathInfo.substring(1); // Remove the leading "/"
+         System.out.println("Extracted Order ID: " + orderIdString);
+        try {
+            // Parse the order ID as an integer
+            int orderId = Integer.parseInt(orderIdString);
+            
+            // Retrieve order details based on the order ID
+            // You can use the DataManager class or your database queries here
+            Order order = dataManager.getOrder(orderId);
+            List<OrderItem> orderItems = dataManager.getOrderItems(orderId);
+            
+            if (order != null) {
+                // Forward the request to the order-details.jsp page
+                request.setAttribute("order", order);
+                request.setAttribute("items", orderItems);
+                request.getRequestDispatcher("/order-details.jsp").forward(request, response);
+                return; // Exit the servlet
+            }
+        } catch (NumberFormatException e) {
+            // Handle invalid order ID format (e.g., non-integer)
+        }   catch (SQLException ex) {
+                Logger.getLogger(OrderDetailsServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
-        
-        
-        
     
+    // If order details retrieval fails or order ID is invalid, redirect to an error page
+    response.sendRedirect(request.getContextPath() + "/error.jsp");
+    }
 
     /**
      * Handles the HTTP <code>POST</code> method.
