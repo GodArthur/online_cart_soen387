@@ -78,16 +78,23 @@ public class OrderDetailsServlet extends HttpServlet {
         try {
             // Parse the order ID as an integer
             int orderId = Integer.parseInt(orderIdString);
+            double orderTotal=0;
             
-            // Retrieve order details based on the order ID
-            // You can use the DataManager class or your database queries here
+            // Retrieve order details and Item list based on the order ID
             Order order = dataManager.getOrder(orderId);
             List<OrderItem> orderItems = dataManager.getOrderItems(orderId);
             
+            //Calculating the full price of the Order
+            for (OrderItem item : orderItems) {
+                    orderTotal += item.getProduct().getPrice() * item.getQuantity();
+                }
+            
             if (order != null) {
+                // setting the attributes for the list and order details
                 // Forward the request to the order-details.jsp page
                 request.setAttribute("order", order);
                 request.setAttribute("items", orderItems);
+                request.setAttribute("total", orderTotal);
                 request.getRequestDispatcher("/order-details.jsp").forward(request, response);
                 return; // Exit the servlet
             }

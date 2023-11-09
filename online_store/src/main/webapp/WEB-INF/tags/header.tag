@@ -4,7 +4,7 @@
             <nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary p-4 justify-content-center" data-bs-theme="dark">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">
-                        <img src="images/diff_logo_enhanced-removebg.png" width="160"   alt="No_IMG_Found" class="d-inline-block align-text-top">
+                        <img src="/online_store/images/diff_logo_enhanced-removebg.png" width="160"   alt="No_IMG_Found" class="d-inline-block align-text-top">
                         
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

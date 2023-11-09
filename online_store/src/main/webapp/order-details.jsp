@@ -67,6 +67,10 @@
                                 <th scope="row">Shipping Status:</th>
                                 <td>${order.isShipped ? 'Shipped' : 'Not Shipped'}</td>
                             </tr>
+                             <tr>
+                                <th scope="row">Shipping Status:</th>
+                                <td>${total}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -77,7 +81,7 @@
                              <c:forEach var="item" items="${items}">
                                 <div class="col-md-4 mb-4">
                                     <article class="product card">
-                                        <img src="images/spendr_logo1-removebg.png" alt="${item.product.name}" class="card-img-top">
+                                        <img src="/online_store/images/spendr_logo1-removebg.png" alt="${item.product.name}" class="card-img-top">
                                         <div class="card-body">
                                             <h2 class="card-title">${item.product.name}</h2>
                                             <p class="card-text">${item.product.description}</p>

@@ -66,7 +66,7 @@
                         <h2 class="card-title">Id ${order.orderId}</h2>
                         <p class="card-text">Shipping Address: ${order.shippingAddress}</p>
                         <p class="card-text">Tracking# ${order.trackingNumber}</p>
-                        <p class="card-text">Shipping Status : ${order.isShipped}</p>
+                        <p class="card-text">Shipping Status : ${order.isShipped ? 'Shipped' : 'Not Shipped'}</p>
                         <a href="orders/${order.orderId}" class="btn btn-primary">See Details</a>
                     </div>
                 </article>
