@@ -55,39 +55,19 @@
 <main>
   
 
-<table border="1">
-        <tr>
-            <th>Order ID</th>
-            <th>Shipping Address</th>
-            <th>Tracking Number</th>
-            <th>Is Shipped</th>
-        </tr>
-        <c:forEach var="order" items="${orders}">
-            <tr>
-                <td>${order.orderId}</td>
-                <td>${order.shippingAddress}</td>
-                <td>${order.trackingNumber}</td>
-                <td>${order.isShipped}</td>
-            </tr>
-        </c:forEach>
-    </table>
-
-
-   
-
         
          <section id="products" class="container mt-5">
         <div class="row">
 
-          <c:forEach var="product" items="${requestScope.productList}">
+          <c:forEach var="order" items="${orders}">
             <div class="col-md-4 mb-4">
                 <article class="product card">
-                    <img src="images/spendr_logo1-removebg.png" alt="${product.name}" class="card-img-top">
                     <div class="card-body">
-                        <h2 class="card-title">${product.name}</h2>
-                        <p class="card-text">${product.description}</p>
-                        <p class="card-text">Price: $${product.price}</p>
-                        <a href="product-details?slug=${product.URLSlug}" class="btn btn-primary">See Details</a>
+                        <h2 class="card-title">Id ${order.orderId}</h2>
+                        <p class="card-text">Shipping Address: ${order.shippingAddress}</p>
+                        <p class="card-text">Tracking# ${order.trackingNumber}</p>
+                        <p class="card-text">Shipping Status : ${order.isShipped}</p>
+                        <a href="orders/${order.orderId}" class="btn btn-primary">See Details</a>
                     </div>
                 </article>
             </div>

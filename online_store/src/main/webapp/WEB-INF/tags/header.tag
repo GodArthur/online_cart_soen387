@@ -17,13 +17,13 @@
                             </li>
                             
                             <li class="nav-item">
-                                <a class="nav-link" href="Login">Login</a>
+                                <a class="nav-link" href="/online_store/Login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="Cart">Cart</a>
+                                <a class="nav-link" href="/online_store/Cart">Cart</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="orders">Orders</a>
+                                <a class="nav-link" href="/online_store/orders">Orders</a>
                             </li>
                         </ul>
                        

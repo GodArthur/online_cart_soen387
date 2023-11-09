@@ -640,7 +640,7 @@ public class DataManager {
         return orders;
     }
 
-    private List<OrderItem> getOrderItems(int orderId) {
+    public List<OrderItem> getOrderItems(int orderId) {
 
         List<OrderItem> orderItems = new ArrayList<>();
         String sql = "SELECT order_id, quantity, sku FROM ORDER_ITEMS WHERE order_id = ?";
@@ -671,7 +671,7 @@ public class DataManager {
 
     public Order getOrder(int orderId) throws SQLException {
         Order order = null;
-        String sql = "SELECT order_id, shipping_address, tracking_number, is_shipped FROM ORDERS WHERE order_id = ?";
+        String sql = "SELECT order_id, shipping_address, tracking_number, isShipped FROM ORDERS WHERE order_id = ?";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -683,7 +683,7 @@ public class DataManager {
                 order.setOrderId(rs.getInt("order_id"));
                 order.setShippingAddress(rs.getString("shipping_address"));
                 order.setTrackingNumber(rs.getString("tracking_number"));
-                order.setIsShipped(rs.getBoolean("is_shipped"));
+                order.setIsShipped(rs.getBoolean("isShipped"));
 
                 order.setOrderItems(getOrderItems(order.getOrderId()));
             }
@@ -698,7 +698,7 @@ public class DataManager {
 
     public void shipOrder(int orderId, String trackingNumber) throws SQLException {
         // SQL to update the tracking number and is_shipped status
-        String sqlUpdateOrder = "UPDATE ORDERS SET tracking_number = UUID(), is_shipped = TRUE WHERE order_id = ? AND is_shipped = FALSE";
+        String sqlUpdateOrder = "UPDATE ORDERS SET tracking_number = UUID(), isShipped = TRUE WHERE order_id = ? AND is_shipped = FALSE";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement psUpdateOrder = conn.prepareStatement(sqlUpdateOrder)) {
 
