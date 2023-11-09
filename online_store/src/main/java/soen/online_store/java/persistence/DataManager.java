@@ -578,12 +578,14 @@ public class DataManager {
     }
 
     public void createOrder(User user, String shippingAddress) {
-
         //Query String
         String sql = "INSERT INTO ORDERS (user_id, shipping_address) values(?, ?)";
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
 
             //Creating the query object used to execute the query
+             ps.setInt(1, user.getUserID()); // Assuming getUserId() returns the user's ID
+             ps.setString(2, shippingAddress);
+
             //Resultset is the set of rows returned from the query
             ps.executeUpdate();
 

@@ -76,12 +76,14 @@
                 </div>
             </div>
         </section>
-                            
+                            <div class="row">
                             <h2 class="card-title">Here are you products</h2>
                              <c:forEach var="item" items="${items}">
                                 <div class="col-md-4 mb-4">
                                     <article class="product card">
-                                        <img src="/online_store/images/spendr_logo1-removebg.png" alt="${item.product.name}" class="card-img-top">
+                                        <div style="width: 40%;">
+                                        <img src="/online_store/images/spendr_logo1-removebg.png" alt="${item.product.name}" class="card-img-top" >
+                                        </div>
                                         <div class="card-body">
                                             <h2 class="card-title">${item.product.name}</h2>
                                             <p class="card-text">${item.product.description}</p>
@@ -91,7 +93,7 @@
                                     </article>
                                 </div>
                             </c:forEach>
-                            
+                            </div>
                             
     </main>
 
