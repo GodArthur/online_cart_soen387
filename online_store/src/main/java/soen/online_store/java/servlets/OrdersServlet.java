@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import soen.online_store.java.Cart;
 import soen.online_store.java.CartItem;
 import soen.online_store.java.Order;
@@ -70,6 +71,12 @@ public class OrdersServlet extends HttpServlet {
             List<Order> orders = dataManager.getOrders(currentUser);
             // Set the orders as an attribute in the request
             request.setAttribute("orders", orders);
+            
+            //If user is staff, get the list of all orders
+            if (currentUser.isIsStaff()) {
+            List<Order> allorders = dataManager.getAllOrders();
+            request.setAttribute("allorders", allorders);
+            }
             // Forward the request to the "orders.jsp" page
             request.getRequestDispatcher("/orders.jsp").forward(request, response);
         } else {
@@ -79,7 +86,7 @@ public class OrdersServlet extends HttpServlet {
     }
         
         
-        
+
     
 
     /**
@@ -93,7 +100,7 @@ public class OrdersServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
 
     /**

@@ -123,12 +123,25 @@
     <% } else { %>
     <p class="card-text">You are not allowed to see that</p>
     <% } %>
+    
+    
+    
+     <%--A simple div for styling purposes--%>
+<div style="background-color: white; height: 50px;"></div> <!-- Creates a black space of 20px height -->
 
 
-
-
-</main>
-
+<c:if test="${not empty cart}">
+       
+    
+<div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9;">
+    <form action="Cart" method="post">
+        <input type="hidden" name="_method" value="order">
+        <label for="address" style="font-weight: bold;">Shipping Address:</label>
+        <input type="text" class="form-control" name="address" id="address" value="123 Concordia St, Montreal, Canada" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        <button type="submit" class="btn btn-primary" style="background-color: #333; color: #fff; border: none; border-radius: 4px; padding: 10px 20px; cursor: pointer;">Order at this Address</button>
+    </form>
+</div>
+</c:if>
 
 <footer>
     <p>© 2023 Online Storefront</p>

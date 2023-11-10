@@ -55,7 +55,7 @@
 <main>
   
 
-        
+           <h2 >Your orders</h2>
          <section id="products" class="container mt-5">
         <div class="row">
 
@@ -63,10 +63,10 @@
             <div class="col-md-4 mb-4">
                 <article class="product card">
                     <div class="card-body">
-                        <h2 class="card-title">Id ${order.orderId}</h2>
+                        <h2 class="card-title">#00${order.orderId}</h2>
                         <p class="card-text">Shipping Address: ${order.shippingAddress}</p>
                         <p class="card-text">Tracking# ${order.trackingNumber}</p>
-                        <p class="card-text">Shipping Status : ${order.isShipped}</p>
+                        <p class="card-text">Shipping Status : ${order.isShipped ? 'Shipped' : 'Not Shipped'}</p>
                         <a href="orders/${order.orderId}" class="btn btn-primary">See Details</a>
                     </div>
                 </article>
@@ -75,7 +75,81 @@
 
         </div>
     </section>
+    
+    
+     <%--A simple div for styling purposes--%>
+<div style="background-color: white; height: 50px;"></div> <!-- Creates a black space of 20px height -->
+    
+    
+    <% if (currentUser.isIsStaff()) { %>
+    <h2 >As a staff member, you get to see all the orders</h2>
+    
+    <section id="products" class="container mt-5">
+        <div class="row">
 
+          <c:forEach var="order" items="${allorders}">
+            <div class="col-md-4 mb-4">
+                <article class="product card">
+                    <div class="card-body">
+                        <h2 class="card-title">#00${order.orderId}</h2>
+                        <p class="card-text">Shipping Status : ${order.isShipped ? 'Shipped' : 'Not Shipped'}</p>
+                        <a href="orders/${order.orderId}" class="btn btn-primary">See Details</a>
+                    </div>
+                </article>
+            </div>
+        </c:forEach>
+
+        </div>
+    </section>
+<!--    This is an attempt at making a filter, but this doesnt work-->    
+<!--    <div class="mb-3">
+    <label for="filterShipped">Filter by Shipped:</label>
+    <select id="filterShipped">
+        <option value="all">All Orders</option>
+        <option value="notShipped">Not Shipped Orders</option>
+    </select>
+</div>-->
+    
+
+<!--    <section id="products" class="container mt-5">
+    <div id="filteredOrdersContainer" class="row">
+        <c:choose>
+            <c:when test="${filterShipped == 'notShipped'}">
+                <c:forEach var="order" items="${allorders}">
+                    <c:if test="${!order.isShipped}">
+                         Display the order here 
+                        <div class="col-md-4 mb-4">
+                            <article class="product card">
+                                <div class="card-body">
+                                    <h2 class="card-title">#00${order.orderId}</h2>
+                                    <p class="card-text">Shipping Status : Not Shipped</p>
+                                    <a href="orders/${order.orderId}" class="btn btn-primary">See Details</a>
+                                </div>
+                            </article>
+                        </div>
+                    </c:if>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <c:forEach var="order" items="${allorders}">
+                     Display all orders here 
+                    <div class="col-md-4 mb-4">
+                        <article class="product card">
+                            <div class="card-body">
+                                <h2 class="card-title">#00${order.orderId}</h2>
+                                <p class="card-text">Shipping Status : ${order.isShipped ? 'Shipped' : 'Not Shipped'}</p>
+                                <a href="orders/${order.orderId}" class="btn btn-primary">See Details</a>
+                            </div>
+                        </article>
+                    </div>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</section>-->
+
+   <% } %>
+   
    
 </main>
 
@@ -83,6 +157,37 @@
     <p>© 2023 Online Storefront</p>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+    // Initialize the page with all orders
+    loadOrders("all");
+
+    // Handle the change event of the filter dropdown
+    $("#filterShipped").on("change", function () {
+        var filterValue = $(this).val();
+        loadOrders(filterValue);
+    });
+});
+
+function loadOrders(filter) {
+    $.ajax({
+        url: "orders", // Your servlet URL
+        type: "GET",
+        data: { filterShipped: filter },
+        dataType: "html",
+        success: function (data) {
+            // Update the container with the filtered orders
+            $("#filteredOrdersContainer").html(data);
+        },
+        error: function () {
+            alert("An error occurred while fetching orders.");
+        }
+    });
+}
+</script>
 
 
 </body>

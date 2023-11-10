@@ -100,6 +100,7 @@ public class CartServlet extends HttpServlet {
 
         //Session information
         String sku = request.getParameter("sku");
+        String shippingAddress = request.getParameter("address");
 
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("user");
@@ -120,7 +121,15 @@ public class CartServlet extends HttpServlet {
 
         DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
         DataManager dataManager = new DataManager(dbConnection);
-
+        
+        
+        Cart currentCart = dataManager.getCart(currentUser);
+                    //Cart currentCart = (Cart) currentUser.getCart();
+                    if (currentUser.getCart() == null) {
+                        currentUser.setCart(currentCart);
+                    }
+                    
+                    
         if (currentUser != null) {
             switch (method) {
 
@@ -141,14 +150,14 @@ public class CartServlet extends HttpServlet {
                     
                 case "clearCart":
                     dataManager.clearCart(currentUser);
+                    
+                case "order":
+                dataManager.createOrder(currentUser, shippingAddress);
+                dataManager.clearCart(currentUser);
 
             }
 
-            Cart currentCart = dataManager.getCart(currentUser);
-            //Cart currentCart = (Cart) currentUser.getCart();
-            if (currentUser.getCart() == null) {
-                currentUser.setCart(currentCart);
-            }
+            
             List<CartItem> cartItems = currentCart.getCartItems();
 
             if (cartItems.isEmpty() || currentCart == null) {
@@ -157,6 +166,7 @@ public class CartServlet extends HttpServlet {
                 request.setAttribute("cart", cartItems);
             }
 
+            
             // Redirect back to the product details page or any other page as needed
             response.sendRedirect("Cart");
         } else {

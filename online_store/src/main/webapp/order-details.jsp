@@ -67,17 +67,30 @@
                                 <th scope="row">Shipping Status:</th>
                                 <td>${order.isShipped ? 'Shipped' : 'Not Shipped'}</td>
                             </tr>
+                             <tr>
+                                <th scope="row">Shipping Status:</th>
+                                <td>${total}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+                            <% if (currentUser.isIsStaff() ) { %>
+                            <form action="OrderDetailsServlet" method="POST">
+                            <input type="hidden" name="orderId" value="${order.orderId}">
+                            <input type="hidden" name="action" value="shipOrder">
+                            <button type="submit" class="btn btn-success">Ship Now</button>
+                            </form>
+                            <% } %>
         </section>
-                            
-                            <h2 class="card-title">Here are you products</h2>
+                            <div class="row">
+                            <h2 class="card-title">Here are your products</h2>
                              <c:forEach var="item" items="${items}">
                                 <div class="col-md-4 mb-4">
                                     <article class="product card">
-                                        <img src="images/spendr_logo1-removebg.png" alt="${item.product.name}" class="card-img-top">
+                                        <div style="width: 40%;">
+                                        <img src="/online_store/images/spendr_logo1-removebg.png" alt="${item.product.name}" class="card-img-top" >
+                                        </div>
                                         <div class="card-body">
                                             <h2 class="card-title">${item.product.name}</h2>
                                             <p class="card-text">${item.product.description}</p>
@@ -87,7 +100,7 @@
                                     </article>
                                 </div>
                             </c:forEach>
-                            
+                            </div>
                             
     </main>
 
