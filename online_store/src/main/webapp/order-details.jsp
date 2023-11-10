@@ -18,6 +18,7 @@
         <header>
             <%-- Check if the user is logged in by looking for the "username" attribute in the session --%>
             <% User currentUser = (User) session.getAttribute("user"); %>
+            <% Order testorder = (Order) session.getAttribute("order"); %>
 
             <%-- Includes the different tabs of the header --%>
             <jsp:include page="/WEB-INF/tags/header.tag" />
@@ -68,20 +69,22 @@
                                 <td>${order.isShipped ? 'Shipped' : 'Not Shipped'}</td>
                             </tr>
                              <tr>
-                                <th scope="row">Shipping Status:</th>
+                                <th scope="row">Total Price:</th>
                                 <td>${total}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-                            <% if (currentUser.isIsStaff() ) { %>
+                            <c:if test="${!order.isShipped}">
+                            <% if (currentUser.isIsStaff()) { %>
                             <form action="OrderDetailsServlet" method="POST">
-                            <input type="hidden" name="orderId" value="${order.orderId}">
-                            <input type="hidden" name="action" value="shipOrder">
-                            <button type="submit" class="btn btn-success">Ship Now</button>
+                                <input type="hidden" name="orderId" value="${order.orderId}">
+                                <input type="hidden" name="action" value="shipOrder">
+                                <button type="submit" class="btn btn-success">Ship Now</button>
                             </form>
-                            <% } %>
+                                <% } %>
+                        </c:if>
         </section>
                             <div class="row">
                             <h2 class="card-title">Here are your products</h2>

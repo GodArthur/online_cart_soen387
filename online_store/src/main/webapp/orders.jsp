@@ -59,6 +59,7 @@
          <section id="products" class="container mt-5">
         <div class="row">
 
+            
           <c:forEach var="order" items="${orders}">
             <div class="col-md-4 mb-4">
                 <article class="product card">
