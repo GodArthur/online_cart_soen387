@@ -68,7 +68,7 @@
                                 <td>${order.isShipped ? 'Shipped' : 'Not Shipped'}</td>
                             </tr>
                              <tr>
-                                <th scope="row">Shipping Status:</th>
+                                <th scope="row">Total Price:</th>
                                 <td>${total}</td>
                             </tr>
                         </tbody>
