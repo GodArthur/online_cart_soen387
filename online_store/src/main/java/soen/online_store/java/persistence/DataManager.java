@@ -642,6 +642,32 @@ public class DataManager {
         return orders;
     }
 
+    public List<Order> getAllOrders() {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT order_id, shipping_address, tracking_number, isShipped FROM ORDERS ";
+
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = new Order();
+                order.setOrderId(rs.getInt("order_id"));
+                order.setShippingAddress(rs.getString("shipping_address"));
+                order.setTrackingNumber(rs.getString("tracking_number"));
+                order.setIsShipped(rs.getBoolean("isShipped"));
+
+                order.setOrderItems(getOrderItems(order.getOrderId()));
+                orders.add(order);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return orders;
+    }
+    
     public List<OrderItem> getOrderItems(int orderId) {
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -700,7 +726,7 @@ public class DataManager {
 
     public void shipOrder(int orderId, String trackingNumber) throws SQLException {
         // SQL to update the tracking number and is_shipped status
-        String sqlUpdateOrder = "UPDATE ORDERS SET tracking_number = UUID(), isShipped = TRUE WHERE order_id = ? AND is_shipped = FALSE";
+        String sqlUpdateOrder = "UPDATE ORDERS SET tracking_number = CONCAT('TRACK', SUBSTRING(UUID(), 1, 4), SUBSTRING(UUID(), LENGTH(UUID()) - 3, 4)), isShipped = TRUE WHERE order_id = ? AND isShipped = FALSE";
 
         try (Connection conn = dbConnection.getConnection(); PreparedStatement psUpdateOrder = conn.prepareStatement(sqlUpdateOrder)) {
 

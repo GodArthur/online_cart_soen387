@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import soen.online_store.java.Cart;
@@ -109,6 +110,13 @@ public class OrderDetailsServlet extends HttpServlet {
     response.sendRedirect(request.getContextPath() + "/error.jsp");
     }
 
+    public String generateTrackingNumber() {
+    Random random = new Random();
+    int randomNumber = random.nextInt(1000000000) + 1; // Generates a random number between 1 and 1,000,000
+    return "TRACK" + randomNumber;
+}
+    
+
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -120,7 +128,38 @@ public class OrderDetailsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String action = request.getParameter("action");
+        
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        
+        // Establish a database connection
+            Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
+            String dbUrl = configProps.getProperty("database.url");
+            String dbUser = configProps.getProperty("database.user");
+            String dbPassword = configProps.getProperty("database.password");
+            String dbDriver = configProps.getProperty("database.driver");
+
+            DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
+            DataManager dataManager = new DataManager(dbConnection);
+        
+
+    if ("shipOrder".equals(action)) {
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        String trackingNumber = generateTrackingNumber(); // Implement this method to generate a tracking number
+
+        try {
+            // Call the shipOrder method to update the order's status
+            dataManager.shipOrder(orderId, trackingNumber);
+        } catch (SQLException e) {
+            // Handle any SQLException, e.g., order not found or already shipped
+            e.printStackTrace();
+            // You can set an error message or redirect to an error page if needed
+        }
+    }
+
+    // Redirect back to the order details page
+    response.sendRedirect(request.getContextPath() + "/orders");
     }
 
     /**

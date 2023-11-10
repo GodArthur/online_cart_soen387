@@ -75,9 +75,16 @@
                     </table>
                 </div>
             </div>
+                            <% if (currentUser.isIsStaff() ) { %>
+                            <form action="OrderDetailsServlet" method="POST">
+                            <input type="hidden" name="orderId" value="${order.orderId}">
+                            <input type="hidden" name="action" value="shipOrder">
+                            <button type="submit" class="btn btn-success">Ship Now</button>
+                            </form>
+                            <% } %>
         </section>
                             <div class="row">
-                            <h2 class="card-title">Here are you products</h2>
+                            <h2 class="card-title">Here are your products</h2>
                              <c:forEach var="item" items="${items}">
                                 <div class="col-md-4 mb-4">
                                     <article class="product card">
