@@ -34,9 +34,6 @@ public class DBContextListener implements ServletContextListener{
     
     Once you need access to these configuration properties, 
     */
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        // Perform cleanup if necessary
-    }
+    
     
 }

@@ -33,11 +33,9 @@ public class HomeServlet extends HttpServlet {
         //Retrieving db credentials from config located in a Servlet Context
         Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
         String dbUrl = configProps.getProperty("database.url");
-        String dbUser = configProps.getProperty("database.user");
-        String dbPassword = configProps.getProperty("database.password");
-        String dbDriver = configProps.getProperty("database.driver");
+       
         
-        DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
+        DatabaseConnection dbConnection = new DatabaseConnection(dbUrl);
         DataManager dataManager = new DataManager(dbConnection);
         
         List<Product> products = dataManager.getAllProducts();

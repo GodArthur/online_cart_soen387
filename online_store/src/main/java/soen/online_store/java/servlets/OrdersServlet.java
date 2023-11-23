@@ -64,7 +64,7 @@ public class OrdersServlet extends HttpServlet {
             String dbPassword = configProps.getProperty("database.password");
             String dbDriver = configProps.getProperty("database.driver");
 
-            DatabaseConnection dbConnection = new DatabaseConnection(dbUrl, dbUser, dbPassword, dbDriver);
+            DatabaseConnection dbConnection = new DatabaseConnection(dbUrl);
             DataManager dataManager = new DataManager(dbConnection);
         
         if (currentUser != null) {
