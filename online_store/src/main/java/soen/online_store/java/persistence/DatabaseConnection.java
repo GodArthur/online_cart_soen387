@@ -5,30 +5,32 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
+ * This class manages the database connection.
+ * For SQLite, only the URL is needed to establish the connection.
+ * No username or password is required.
+ * Ensure the SQLite JDBC driver JAR is included in your project dependencies.
  *
  * @author Korjon Chang-Jones
  */
 public class DatabaseConnection {
 
     private final String url;
-    private final String user;
-    private final String password;
-    private final String driver;
 
-    public DatabaseConnection(String url, String user, String password, String driver) {
+    public DatabaseConnection(String url) {
         this.url = url;
-        this.user = user;
-        this.password = password;
-        this.driver = driver;
+        
+        // Attempt to load the SQLite JDBC driver
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            // Handle error that the driver class could not be found
+            System.out.println("SQLite JDBC Driver not found.");
+            e.printStackTrace();
+        }
     }
 
     public Connection getConnection() throws SQLException {
-        // Ensure the JDBC driver is loaded (may be unnecessary with newer JDBC versions)
-        try {
-            Class.forName(driver);
-        } catch (ClassNotFoundException e) {
-            throw new SQLException("MySQL JDBC driver not found", e);
-        }
-        return DriverManager.getConnection(url, user, password);
+        // DriverManager will recognize the JDBC URL for SQLite and provide the correct connection
+        return DriverManager.getConnection(url);
     }
 }
