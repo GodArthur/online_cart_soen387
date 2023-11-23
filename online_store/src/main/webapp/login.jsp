@@ -52,24 +52,43 @@
         </header>
         
         
-        <% if (currentUser != null) { %>
-            <p> You are already logged in,  <%= currentUser.getUsername()%> </p>
-                        
-        <% } else { %>
-        <form action="Login" method="post">  
-            Name:<input type="text" name="username"/><br/><br/>  
-            Password:<input type="password" name="password"/><br/><br/>  
-            <input type="submit" value="login"/>  
-        </form>  
-        <% } %>
-        
-        
-        
-        
-        <%-- Display the error message if present --%>
-        <% if (request.getAttribute("error") != null) { %>
-            <p style="color: red;"><%= request.getAttribute("error") %></p>
-        <% } %>
+        <div class="container">
+        <div class="row justify-content-center align-items-center" style="height: 80vh;">
+            <div class="col-4">
+                <div class="card">
+                <% if (currentUser != null) { %>
+                    <h4 class="cart-title text-center mb-3">You are already logged in, <%= currentUser.getUsername()%></h4>
+                    <div class="card">
+                <% } else { %>
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title text-center mb-4">Login</h3>
+                            <form action="Login" method="post">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Name:</label>
+                                    <input type="text" class="form-control" name="username" id="username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password:</label>
+                                    <input type="password" class="form-control" name="password" id="password" required>
+                                </div>
+                                <div class="d-grid">
+                                    <input type="submit" class="btn btn-primary" value="Login">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                <% } %>
+
+                <!-- Display the error message if present -->
+                <% if (request.getAttribute("error") != null) { %>
+                    <div class="alert alert-danger text-center mt-4" role="alert">
+                        <%= request.getAttribute("error") %>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
         
         
     </body>

@@ -31,6 +31,8 @@ public class DatabaseConnection {
 
     public Connection getConnection() throws SQLException {
         // DriverManager will recognize the JDBC URL for SQLite and provide the correct connection
+        
+        System.out.println(url);
         return DriverManager.getConnection(url);
     }
 }
