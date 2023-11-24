@@ -740,5 +740,48 @@ public class DataManager {
             }
         }
     }
+    
+    public void setOrderOwner(int orderId, int userId) throws SQLException {
+    String sql = "UPDATE ORDERS SET user_id = ? WHERE order_id = ?";
+    try (Connection conn = dbConnection.getConnection();
+         PreparedStatement psOrderOwn = conn.prepareStatement(sql)) {
+        psOrderOwn.setInt(1, userId);
+        psOrderOwn.setInt(2, orderId);
+        psOrderOwn.executeUpdate();
+    }
+}
+
+public void setPasscode(User user, String passCode) throws SQLException {
+    String selectSql = "SELECT count(*) FROM USERS WHERE password = ?";
+    String sql_mod = " UPDATE USERS SET password = ? where user_id = ?";
+    
+    try (Connection conn = dbConnection.getConnection();
+         PreparedStatement checkStmt = conn.prepareStatement(selectSql);
+         PreparedStatement psSetPass = conn.prepareStatement(sql_mod)) {
+        
+        // Check if passcode is taken
+        checkStmt.setString(1, passCode);
+        ResultSet rs = checkStmt.executeQuery();
+        if (rs.next() && rs.getInt(1) > 0) {
+            throw new SQLException("Passcode is already taken.");
+        }
+        
+        // Set new passcode
+        psSetPass.setString(1, passCode);
+        psSetPass.setInt(2, user.getUserID());
+        psSetPass.executeUpdate();
+    }
+}
+
+public void changePermission(User user, String role) throws SQLException {
+    String sql = "UPDATE USERS SET is_staff = ? WHERE user_id = ?";
+    try (Connection conn = dbConnection.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setBoolean(1, "staff".equals(role));
+        pstmt.setInt(2, user.getUserID());
+        pstmt.executeUpdate();
+    }
+}
+
 
 }
