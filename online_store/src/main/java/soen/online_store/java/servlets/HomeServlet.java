@@ -28,22 +28,19 @@ public class HomeServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-       
+
         //Retrieving db credentials from config located in a Servlet Context
         Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
         String dbUrl = configProps.getProperty("database.url");
-       
-        
+
         DatabaseConnection dbConnection = new DatabaseConnection(dbUrl);
         DataManager dataManager = new DataManager(dbConnection);
-        
+
         List<Product> products = dataManager.getAllProducts();
-        
+
         request.setAttribute("productList", products);
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
-       
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
