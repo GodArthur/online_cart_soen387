@@ -19,8 +19,7 @@ import jakarta.servlet.http.HttpSession;
 public class SettingsServlet extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -47,9 +46,16 @@ public class SettingsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.getRequestDispatcher("/settings.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
 
-        processRequest(request, response);
+        if (currentUser == null) {
+            // Redirect to the login page if the user is not logged in
+            response.sendRedirect(request.getContextPath() + "/Login");
+        } else {
+            request.getRequestDispatcher("/settings.jsp").forward(request, response);
+        }
+
     }
 
     /**
@@ -87,6 +93,8 @@ public class SettingsServlet extends HttpServlet {
 
             if (isPasswordFree) {
 
+                currentUser.setPassword(newPassword);
+                request.setAttribute("success", "Password change successfull");
                 request.getRequestDispatcher("/settings.jsp").forward(request, response);
 
             } else {
@@ -103,15 +111,15 @@ public class SettingsServlet extends HttpServlet {
         //Checking if the current password 
         //matches the actual user's password
         String error = "error";
-        if (currentUser.getPassword().equals(currentPassword)) {
+        if (!currentUser.getPassword().equals(currentPassword)) {
             request.setAttribute(error, "Invalid current password");
             return false;
 
-        } else if (newPassword.length() >= 4) {
+        } else if (newPassword.length() < 4) {
             request.setAttribute(error, "New password is less than 4 characters");
             return false;
 
-        } else if (newPassword.equals(confirmNewPassword)) {
+        } else if (!newPassword.equals(confirmNewPassword)) {
             request.setAttribute(error, "Confirmation password does not match new password");
             return false;
         }

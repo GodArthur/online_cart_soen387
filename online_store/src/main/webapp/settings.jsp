@@ -54,7 +54,7 @@
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <h2>Change Password</h2>
-            <form action="ChangePassword" method="post">
+            <form action="Settings" method="post">
                 <input type="hidden" name ="_method" value="put">
                 <div class="form-group">
                     <label for="currentPassword">Current Password</label>
@@ -78,7 +78,15 @@
         <%= request.getAttribute("error") %>
     </div>
     <% } %>
+    
+      <!-- Display the Success message if present -->
+    <% if (request.getAttribute("success") != null) { %>
+    <div class="alert alert-success text-center mt-4" role="alert">
+        <%= request.getAttribute("success") %>
+    </div>
+    <% } %>
 </div>
+
 
 </body>
 </html>

@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+
 /**
  *
  * @author Kojo
@@ -29,6 +30,7 @@ public class HomeServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        
         //Retrieving db credentials from config located in a Servlet Context
         Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
         String dbUrl = configProps.getProperty("database.url");
