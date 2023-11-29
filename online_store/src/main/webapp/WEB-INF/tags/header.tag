@@ -1,3 +1,4 @@
+<<<<<<< HEAD
      <!--
         The div are purposely left unclosed.
     --!>
@@ -25,9 +26,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="/online_store/orders">Orders</a>
                             </li>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/online_store/Settings">Settings</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/online_store/orderClaims">orderClaims</a>
                             </li>
-                        </ul>
-                       
-                
+                        </ul>       

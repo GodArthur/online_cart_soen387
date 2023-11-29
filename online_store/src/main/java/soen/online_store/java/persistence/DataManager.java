@@ -583,8 +583,8 @@ public class DataManager {
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
 
             //Creating the query object used to execute the query
-             ps.setInt(1, user.getUserID()); // Assuming getUserId() returns the user's ID
-             ps.setString(2, shippingAddress);
+            ps.setInt(1, user.getUserID()); // Assuming getUserId() returns the user's ID
+            ps.setString(2, shippingAddress);
 
             //Resultset is the set of rows returned from the query
             ps.executeUpdate();
@@ -667,7 +667,7 @@ public class DataManager {
 
         return orders;
     }
-    
+
     public List<OrderItem> getOrderItems(int orderId) {
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -740,49 +740,49 @@ public class DataManager {
             }
         }
     }
-    
+
     public void setOrderOwner(int orderId, int userId) throws SQLException {
-    String sql = "UPDATE ORDERS SET user_id = ? WHERE order_id = ?";
-    try (Connection conn = dbConnection.getConnection();
-         PreparedStatement psOrderOwn = conn.prepareStatement(sql)) {
-        psOrderOwn.setInt(1, userId);
-        psOrderOwn.setInt(2, orderId);
-        psOrderOwn.executeUpdate();
-    }
-}
-
-public void setPasscode(User user, String passCode) throws SQLException {
-    String selectSql = "SELECT count(*) FROM USERS WHERE password = ?";
-    String sql_mod = " UPDATE USERS SET password = ? where user_id = ?";
-    
-    try (Connection conn = dbConnection.getConnection();
-         PreparedStatement checkStmt = conn.prepareStatement(selectSql);
-         PreparedStatement psSetPass = conn.prepareStatement(sql_mod)) {
-        
-        // Check if passcode is taken
-        checkStmt.setString(1, passCode);
-        ResultSet rs = checkStmt.executeQuery();
-        if (rs.next() && rs.getInt(1) > 0) {
-            throw new SQLException("Passcode is already taken.");
+        String sql = "UPDATE ORDERS SET user_id = ? WHERE order_id = ?";
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement psOrderOwn = conn.prepareStatement(sql)) {
+            psOrderOwn.setInt(1, userId);
+            psOrderOwn.setInt(2, orderId);
+            psOrderOwn.executeUpdate();
         }
-        
-        // Set new passcode
-        psSetPass.setString(1, passCode);
-        psSetPass.setInt(2, user.getUserID());
-        psSetPass.executeUpdate();
     }
-}
 
-public void changePermission(User user, String role) throws SQLException {
-    String sql = "UPDATE USERS SET is_staff = ? WHERE user_id = ?";
-    try (Connection conn = dbConnection.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        pstmt.setBoolean(1, "staff".equals(role));
-        pstmt.setInt(2, user.getUserID());
-        pstmt.executeUpdate();
+    public boolean setPasscode(User user, String passCode) {
+        String selectSql = "SELECT count(*) FROM USERS WHERE password = ?";
+        String sql_mod = " UPDATE USERS SET password = ? where user_id = ?";
+
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement checkStmt = conn.prepareStatement(selectSql); PreparedStatement psSetPass = conn.prepareStatement(sql_mod)) {
+
+            // Check if passcode is taken
+            checkStmt.setString(1, passCode);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                throw new SQLException("Passcode is already taken.");
+            }
+
+            // Set new passcode
+            psSetPass.setString(1, passCode);
+            psSetPass.setInt(2, user.getUserID());
+            psSetPass.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+
+        }
+        return true;
     }
-}
 
+    public void changePermission(User user, String role) throws SQLException {
+        String sql = "UPDATE USERS SET is_staff = ? WHERE user_id = ?";
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setBoolean(1, "staff".equals(role));
+            pstmt.setInt(2, user.getUserID());
+            pstmt.executeUpdate();
+        }
+    }
 
 public boolean isOrderClaimable(int orderId) throws SQLException {
     String sql = "SELECT user_id FROM ORDERS WHERE order_id = ?";
