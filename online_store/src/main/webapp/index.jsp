@@ -51,7 +51,7 @@
 
         <%-- Display a welcome message if the user is logged in --%>
         <% if (currentUser != null) { %>
-        <p>Welcome, <%= currentUser.getUsername() %>!</p>
+        <p>Welcome, <%= currentUser.getUsername()%>, password = <%=currentUser.getPassword()%> </p>
 
         <%-- If the user is a staff, show him the create item option --%>
         <% if (currentUser.isIsStaff()) { %>
