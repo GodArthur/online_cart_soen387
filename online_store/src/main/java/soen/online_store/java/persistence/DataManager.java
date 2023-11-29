@@ -784,4 +784,49 @@ public void changePermission(User user, String role) throws SQLException {
 }
 
 
+public boolean isOrderClaimable(int orderId) throws SQLException {
+    String sql = "SELECT user_id FROM ORDERS WHERE order_id = ?";
+    
+    try (Connection conn = dbConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setInt(1, orderId);
+        ResultSet rs = ps.executeQuery();
+        
+        if (rs.next()) {
+            int userId = rs.getInt("user_id");
+            if (rs.wasNull()) {
+                // Order is claimable if there is no user associated with it
+                return true;
+            } else {
+                // Check if the associated user has a passcode set
+                return !isUserPasscodeSet(userId);
+            }
+        }
+    }
+    return false; // Order is not claimable if not found or other conditions are not met
+}
+
+
+
+
+
+public boolean isUserPasscodeSet(int userId) throws SQLException {
+    String sql = "SELECT password FROM USERS WHERE user_id = ?";
+    
+    try (Connection conn = dbConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+        
+        if (rs.next()) {
+            String password = rs.getString("password");
+            // A non-null and non-empty password indicates a passcode is set
+            return password != null && !password.trim().isEmpty();
+        }
+    }
+    return false; // No passcode set if user not found or password is null/empty
+}
+
 }

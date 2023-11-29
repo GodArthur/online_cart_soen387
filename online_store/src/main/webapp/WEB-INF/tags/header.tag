@@ -25,6 +25,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="/online_store/orders">Orders</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/online_store/orderClaims">orderClaims</a>
+                            </li>
                         </ul>
                        
                 
