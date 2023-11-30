@@ -84,5 +84,7 @@ public class User {
     public void setIsStaff(boolean isStaff) {
         this.isStaff = isStaff;
     }
+    
+    
 
 }

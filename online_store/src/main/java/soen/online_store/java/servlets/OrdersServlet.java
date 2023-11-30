@@ -100,8 +100,44 @@ public class OrdersServlet extends HttpServlet {
 @Override
 protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
+    String action = request.getParameter("action");
+    HttpSession session = request.getSession();
+    User currentUser = (User) session.getAttribute("user");
     
+    // Establish a database connection
+    Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
+    String dbUrl = configProps.getProperty("database.url");
+    
+    DatabaseConnection dbConnection = new DatabaseConnection(dbUrl);
+    DataManager dataManager = new DataManager(dbConnection);
+
+    if ("claimOrder".equals(action)) {
+        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        
+        try {
+            // Check if the order is claimable
+            boolean claimable = dataManager.isOrderClaimable(orderId);
+            if (claimable) {
+                // Claim the order by setting the current user as the order's owner
+                dataManager.setOrderOwner(orderId, currentUser.getUserID());
+                // Redirect to a confirmation page or back to the order list with a success message
+                session.setAttribute("claimSuccess", "Order claimed successfully.");
+            } else {
+                // Set an error message if the order cannot be claimed
+                session.setAttribute("claimError", "Order cannot be claimed.");
+            }
+        } catch (SQLException e) {
+            // Handle any SQLException
+            e.printStackTrace();
+            // Set an error message in the session
+            session.setAttribute("claimError", "Error occurred while claiming the order.");
+        }
+        
+        // Redirect back to the order claim page
+        response.sendRedirect(request.getContextPath() + "/orderClaims.jsp");
+    }
 }
+
  
     /**
      * Returns a short description of the servlet.

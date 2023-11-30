@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
      <!--
         The div are purposely left unclosed.
     --!>
