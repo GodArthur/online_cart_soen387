@@ -30,7 +30,7 @@ public class DataManager {
     }
 
     // Method to retrieve a user by username and password from the database
-    public User getUserByUsernameAndPassword(String username, String password) {
+    public User getUserByPassword(String password) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -41,10 +41,9 @@ public class DataManager {
             connection = dbConnection.getConnection();
 
             // Create a SQL query to check the username and password
-            String query = "SELECT * FROM USERS WHERE username = ? AND password = ?";
+            String query = "SELECT * FROM USERS WHERE password = ?";
             preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
+            preparedStatement.setString(1, password);
 
             // Execute the query
             resultSet = preparedStatement.executeQuery();
@@ -85,6 +84,26 @@ public class DataManager {
         }
 
         return user;
+    }
+
+    public boolean createUser(String firstname, String lastname, String password) {
+
+        String sql = "INSERT INTO USERS (firstname, lastname, password) VALUES (?, ?, ?)";
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, "firstname");
+            ps.setString(2, "lastname");
+            ps.setString(3, "password");
+            
+            ps.executeUpdate();
+            
+        } catch (SQLException e) {
+            
+            e.printStackTrace();
+            return false;
+            
+        }
+        return true;
     }
 
     // Define a method to update the isStaff attribute for a user based on password
@@ -784,26 +803,21 @@ public class DataManager {
         }
     }
 
-public boolean isOrderClaimable(int orderId) throws SQLException {
-    String sql = "SELECT user_id FROM ORDERS WHERE order_id = ?";
-    
-    try (Connection conn = dbConnection.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        
-        ps.setInt(1, orderId);
-        ResultSet rs = ps.executeQuery();
-        
-        if (rs.next()) {
-            int userId = rs.getInt("user_id");
-            // If the user_id is not null and not zero, the order is already claimed
-            return userId == 0;
+    public boolean isOrderClaimable(int orderId) throws SQLException {
+        String sql = "SELECT user_id FROM ORDERS WHERE order_id = ?";
+
+        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int userId = rs.getInt("user_id");
+                // If the user_id is not null and not zero, the order is already claimed
+                return userId == 0;
+            }
         }
+        return false; // Order is not claimable if not found
     }
-    return false; // Order is not claimable if not found
-}
-
-
-
-
 
 }
