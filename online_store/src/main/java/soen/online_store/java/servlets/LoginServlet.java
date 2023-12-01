@@ -35,10 +35,10 @@ public class LoginServlet extends HttpServlet {
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
     
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
     
-        String username = request.getParameter("username");
         String password = request.getParameter("password");
         
         
@@ -51,7 +51,7 @@ public class LoginServlet extends HttpServlet {
     DataManager dataManager = new DataManager(dbConnection);
         
      // Check if the username and password match a user in the database
-    User loggedUser = dataManager.getUserByUsernameAndPassword(username, password);
+    User loggedUser = dataManager.getUserByPassword(password);
 
     if (loggedUser != null) {
         // get or create session
