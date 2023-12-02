@@ -87,15 +87,27 @@ public class DataManager {
     }
 
     public boolean createUser(String firstname, String lastname, String password) {
+        
+        // Generate the username
+        String username = firstname + (lastname.length() > 3 ? lastname.substring(0, 3) : lastname);
 
-        String sql = "INSERT INTO USERS (firstname, lastname, password) VALUES (?, ?, ?)";
+        // Updated SQL query to include the username
+        String sql = "INSERT INTO USERS (username, password, firstname, lastname, is_staff) VALUES (?, ?, ?, ?, ?)";
+        
         try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, "firstname");
-            ps.setString(2, "lastname");
-            ps.setString(3, "password");
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.setString(3, firstname);
+            ps.setString(4, lastname);
+            ps.setInt(5, 0); // Setting is_staff to 0 by default
             
-            ps.executeUpdate();
+           int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("User created successfully!" + " " + username + " " + password + " " + firstname + " " + lastname );
+            } else {
+                System.out.println("User with name " + firstname + " error");
+            }
             
         } catch (SQLException e) {
             
