@@ -8,7 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Properties;
 import soen.online_store.java.User;
+import soen.online_store.java.persistence.DataManager;
+import soen.online_store.java.persistence.DatabaseConnection;
 
 /**
  *
@@ -58,7 +61,17 @@ public class LogoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
           HttpSession session = request.getSession(false); // Use the existing session or create a new one if not present
+        User currentUser = (User) session.getAttribute("user");
         if (session != null) {
+            
+            if ("guest".equals(currentUser.getPassword())){
+                // Establish a database connection
+                Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
+                String dbUrl = configProps.getProperty("database.url");
+                DatabaseConnection dbConnection = new DatabaseConnection(dbUrl);
+                DataManager dataManager = new DataManager(dbConnection);
+                dataManager.clearCart(currentUser);
+            }
             session.invalidate(); // Invalidate the session
         }
         

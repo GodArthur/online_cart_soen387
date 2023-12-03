@@ -72,6 +72,16 @@
                                     <input type="submit" class="btn btn-primary" value="Login">
                                 </div>
                             </form>
+                            
+                            <form action="Login" method="post">
+                                <div class="mb-3">
+                                    <input type="hidden" value="guest" class="form-control" name="password" id="password" required>
+                                </div>
+                                <div class="d-grid">
+                                    <input type="submit" class="btn btn-primary" value="Continue as a Guest">
+                                </div>
+                            </form>
+                            
                             <!-- Sign Up Button -->
                             <div class="d-grid mt-3">
                                 <a href="/online_store/Signup" class="btn btn-secondary">Sign Up</a>
