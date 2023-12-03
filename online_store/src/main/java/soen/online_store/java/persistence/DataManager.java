@@ -826,7 +826,7 @@ public class DataManager {
             if (rs.next()) {
                 int userId = rs.getInt("user_id");
                 // If the user_id is not null and not zero, the order is already claimed
-                return userId == 0;
+                return userId == 0 || userId == 32 ;//32 is not always the guest user
             }
         }
         return false; // Order is not claimable if not found
