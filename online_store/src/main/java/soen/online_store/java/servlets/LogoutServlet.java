@@ -64,7 +64,7 @@ public class LogoutServlet extends HttpServlet {
         User currentUser = (User) session.getAttribute("user");
         if (session != null) {
             
-            if ("guest".equals(currentUser.getPassword())){
+            if ("guest".equals(currentUser.getPassword()) && currentUser.getCart() != null){
                 // Establish a database connection
                 Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
                 String dbUrl = configProps.getProperty("database.url");

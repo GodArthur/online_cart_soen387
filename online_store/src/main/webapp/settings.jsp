@@ -87,6 +87,13 @@
     <% } %>
 </div>
 
+ <%-- If the user is a staff, show him the create item option --%>
+        <% if (currentUser.isIsStaff()) { %>
+        <div class="center-button">
+            <a href="ChangePermission" class="btn btn-outline-success">Change users permissions here</a>
+        </div>
+        <% } %>
+
 
 </body>
 </html>
