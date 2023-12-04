@@ -1,5 +1,6 @@
 package soen.online_store.java.persistence;
 
+import jakarta.servlet.http.HttpSession;
 import soen.online_store.java.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -608,43 +609,86 @@ public class DataManager {
         }
     }
 
-    public void createOrder(User user, String shippingAddress) {
-        //Query String
-        String sql = "INSERT INTO ORDERS (user_id, shipping_address) values(?, ?)";
-        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+    
+    public void createOrder(User user, String shippingAddress, HttpSession session) {
+    // Query String for inserting order
+    String insertOrderSql = "INSERT INTO ORDERS (user_id, shipping_address) VALUES (?, ?)";
+    // Query to get the last inserted row ID
+    String getLastIdSql = "SELECT last_insert_rowid()";
+    
+    
 
-            //Creating the query object used to execute the query
-            ps.setInt(1, user.getUserID()); // Assuming getUserId() returns the user's ID
-            ps.setString(2, shippingAddress);
+    try (Connection conn = dbConnection.getConnection(); 
+         PreparedStatement ps = conn.prepareStatement(insertOrderSql);
+         Statement stmt = conn.createStatement()) {
 
-            //Resultset is the set of rows returned from the query
-            ps.executeUpdate();
+        // Set parameters for the order insertion
+        ps.setInt(1, user.getUserID());
+        ps.setString(2, shippingAddress);
+        ps.executeUpdate();
 
-            ResultSet generatedKeys = ps.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                int orderId = generatedKeys.getInt(1);
-
-                // Now we have the order ID, we can insert into ORDER_ITEMS
-                //Getting the user's cart
-                user.setCart(getCart(user));
-                for (CartItem item : user.getCart().getCartItems()) {
-                    // Copy cart items to order items
-                    String copyItemsSql = "INSERT INTO ORDER_ITEMS (sku, order_id, quantity) values (?, ?, ?)";
-                    PreparedStatement itemPs = conn.prepareStatement(copyItemsSql);
-                    itemPs.setString(1, item.getProduct().getSKU()); // Set the order ID
-                    itemPs.setInt(2, orderId); // Set the cart ID
+        // Execute the query to get the last inserted ID
+        ResultSet rs = stmt.executeQuery(getLastIdSql);
+        
+        if (rs.next()) {
+            int orderId = rs.getInt(1);
+            
+            // Store orderId in the session
+            session.setAttribute("latestOrderId", orderId);
+            
+            // Process the order items with the retrieved orderId
+            user.setCart(getCart(user));
+            for (CartItem item : user.getCart().getCartItems()) {
+                String copyItemsSql = "INSERT INTO ORDER_ITEMS (sku, order_id, quantity) VALUES (?, ?, ?)";
+                try (PreparedStatement itemPs = conn.prepareStatement(copyItemsSql)) {
+                    itemPs.setString(1, item.getProduct().getSKU());
+                    itemPs.setInt(2, orderId);
                     itemPs.setInt(3, item.getQuantity());
                     itemPs.executeUpdate();
                 }
             }
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-
         }
-
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
+//    public void createOrder(User user, String shippingAddress) {
+//        //Query String
+//        String sql = "INSERT INTO ORDERS (user_id, shipping_address) values(?, ?)";
+//        try (Connection conn = dbConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+//
+//            //Creating the query object used to execute the query
+//            ps.setInt(1, user.getUserID()); // Assuming getUserId() returns the user's ID
+//            ps.setString(2, shippingAddress);
+//
+//            //Resultset is the set of rows returned from the query
+//            ps.executeUpdate();
+//
+//            ResultSet generatedKeys = ps.getGeneratedKeys();
+//            if (generatedKeys.next()) {
+//                int orderId = generatedKeys.getInt(1);
+//
+//                // Now we have the order ID, we can insert into ORDER_ITEMS
+//                //Getting the user's cart
+//                user.setCart(getCart(user));
+//                for (CartItem item : user.getCart().getCartItems()) {
+//                    // Copy cart items to order items
+//                    String copyItemsSql = "INSERT INTO ORDER_ITEMS (sku, order_id, quantity) values (?, ?, ?)";
+//                    PreparedStatement itemPs = conn.prepareStatement(copyItemsSql);
+//                    itemPs.setString(1, item.getProduct().getSKU()); // Set the order ID
+//                    itemPs.setInt(2, orderId); // Set the cart ID
+//                    itemPs.setInt(3, item.getQuantity());
+//                    itemPs.executeUpdate();
+//                }
+//            }
+//
+//        } catch (SQLException e) {
+//
+//            e.printStackTrace();
+//
+//        }
+//
+//    }
 
     public List<Order> getOrders(User user) {
         List<Order> orders = new ArrayList<>();
@@ -826,7 +870,7 @@ public class DataManager {
             if (rs.next()) {
                 int userId = rs.getInt("user_id");
                 // If the user_id is not null and not zero, the order is already claimed
-                return userId == 0 || userId == 32 ;//32 is not always the guest user
+                return userId == 0 || userId == 32 ;//32 is not always the guest 
             }
         }
         return false; // Order is not claimable if not found

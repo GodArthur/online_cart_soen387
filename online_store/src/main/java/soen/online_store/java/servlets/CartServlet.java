@@ -124,7 +124,8 @@ public class CartServlet extends HttpServlet {
                         currentUser.setCart(currentCart);
                     }
                     
-                    
+       String redirectURL = "Cart"; // Default redirect URL    
+       
         if (currentUser != null) {
             switch (method) {
 
@@ -147,8 +148,15 @@ public class CartServlet extends HttpServlet {
                     dataManager.clearCart(currentUser);
                     
                 case "order":
-                dataManager.createOrder(currentUser, shippingAddress);
+                dataManager.createOrder(currentUser, shippingAddress, session);
                 dataManager.clearCart(currentUser);
+                
+                Integer orderId = (Integer) session.getAttribute("latestOrderId");
+                 if (orderId != null) {
+                   session.setAttribute("orderId", orderId);
+                   redirectURL = "Cart?orderPlaced=true&orderId=" + orderId;
+                } 
+                  break;
 
             }
 
@@ -163,7 +171,7 @@ public class CartServlet extends HttpServlet {
 
             
             // Redirect back to the product details page or any other page as needed
-            response.sendRedirect("Cart");
+            response.sendRedirect(redirectURL);
         } else {
             // Handle the case where the user is not logged in
             response.sendRedirect("login.jsp"); // Redirect to the login page
