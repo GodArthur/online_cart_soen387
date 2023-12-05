@@ -8,10 +8,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 import soen.online_store.java.Product;
 import soen.online_store.java.User;
 import soen.online_store.java.action.ProductManager;
+import soen.online_store.java.persistence.DataManager;
+import soen.online_store.java.persistence.DatabaseConnection;
 
 /**
  *
@@ -46,20 +50,18 @@ public class NewItemServlet extends HttpServlet {
         String sku = request.getParameter("sku");
         double price = Double.parseDouble(request.getParameter("price")); // Parse price as double
         
-         Product newProduct = new Product(sku,name);
-         newProduct.setDescription(description);
-         newProduct.setVendor(vendor);
-         newProduct.setURLSlug(urlSlug);
-         newProduct.setPrice(price);
-         
-         
-         ProductManager productManager = (ProductManager) getServletContext().getAttribute("productManger");
-         List<Product> products = productManager.getAllProducts(); 
-         products.add(newProduct);
-                
-         // Update the ServletContext attribute with the updated product manager (not necessary in this case)
-        getServletContext().setAttribute("productManger", productManager);
-        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        // Establish a database connection
+            Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
+            String dbUrl = configProps.getProperty("database.url");
+            
+
+            DatabaseConnection dbConnection = new DatabaseConnection(dbUrl);
+            DataManager dataManager = new DataManager(dbConnection);
+            
+            // Insert the new product into the database
+            dataManager.createProduct(sku, name, description, vendor, urlSlug, price);
+            // Redirect to the home page after the new product is inserted
+            response.sendRedirect(request.getContextPath() + "/Home");
 }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -35,10 +35,10 @@
                         <form action="Logout" method="post">
                         <input type="submit" value="Logout">
                         </form>
-                         <form class="d-flex" role="search">
-                         <input class="form-control me-2" type="password" placeholder="Secret Code" aria-label="Password">
+                         <form class="d-flex" role="search" method="post" action="StaffPassword">
+                         <input class="form-control me-2" name="password" type="password" placeholder="Secret Code" aria-label="Password">
                          <button class="btn btn-outline-success" type="submit">Enter</button>
-                        </form>  
+                         </form>  
                         <% } %>
                         
                         

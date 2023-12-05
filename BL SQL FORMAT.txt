@@ -1,0 +1,187 @@
+--OrderManager
+
+
+
+-- Insert a new order
+START TRANSACTION;
+
+-- Step 1: Insert a new order into the ORDERS table and get the generated order_id
+INSERT INTO ORDERS (shipping_address, user_id)
+VALUES (@shipping_address, @user_id);
+
+-- Get the last insert ID (MYSQL format)
+SET @order_id = LAST_INSERT_ID();
+
+-- Step 2: Insert items from the cart to the ORDER_ITEMS table 
+INSERT INTO ORDER_ITEMS (order_id, sku, quantity)
+SELECT @order_id, ci.sku, ci.quantity
+FROM CART_ITEMS ci
+INNER JOIN CARTS c ON ci.cart_id = c.cart_id
+WHERE c.user_id = @user_id;
+
+
+
+
+-- ViewOrder
+SELECT o.*, oi.*
+FROM ORDERS o
+JOIN ORDER_ITEMS oi ON o.order_id = oi.order_id
+WHERE o.order_id = order_id_value;
+
+
+--getOrders
+SELECT o.*
+FROM ORDERS o
+WHERE o.user_id = user_id_value;
+
+
+--createProduct
+INSERT INTO PRODUCTS (SKU, name, urlSlug, price) VALUES ('sku', 'name', 'urlSlug', 'price'); --error handling needed in application code to satisfy table constraints
+
+
+--shipOrder
+UPDATE ORDERS
+SET tracking_number = ?  -- Placeholder for the tracking number
+WHERE order_id = ?;      -- Placeholder for the order ID
+
+
+--getOrder
+SELECT 
+  o.order_id,
+  o.shipping_address,
+  o.tracking_number,
+  o.user_id,
+  GROUP_CONCAT(oi.sku ORDER BY oi.sku) AS product_skus,
+  GROUP_CONCAT(oi.quantity ORDER BY oi.sku) AS product_quantities
+FROM 
+  ORDERS AS o
+JOIN 
+  ORDER_ITEMS AS oi ON o.order_id = oi.order_id
+WHERE 
+  o.order_id = ? -- Placeholder for the specific order ID
+  AND (? IS NULL OR o.user_id = ?) -- Placeholder for the optional user ID
+GROUP BY 
+  o.order_id;
+
+
+
+----------------------------------------------------------------
+
+--CartManager
+
+--getCart
+SELECT 
+    p.name,
+    p.description,
+    p.vendor,
+    p.urlSlug,
+    ci.sku,
+    ci.quantity,
+    p.price
+FROM 
+    USERS u
+JOIN 
+    CARTS c ON u.user_id = c.user_id
+JOIN 
+    CART_ITEMS ci ON c.cart_id = ci.cart_id
+JOIN 
+    PRODUCTS p ON ci.sku = p.sku
+WHERE 
+    u.user_id = ?; -- Replace ? with the actual user_id
+
+
+--addProductToCart
+
+--if product not in cart
+INSERT INTO CART_ITEMS (cart_id, sku, quantity)
+SELECT c.cart_id, ?, 1
+FROM CARTS c
+WHERE c.user_id = ? AND NOT EXISTS (
+    SELECT 1 FROM CART_ITEMS ci WHERE ci.sku = ? AND ci.cart_id = c.cart_id
+);
+
+--if already in cart and want to increase quantity
+UPDATE CART_ITEMS
+SET quantity = quantity + 1
+WHERE cart_id = (SELECT cart_id FROM CARTS WHERE user_id = ?)
+  AND sku = ?;
+
+
+
+--removeProductFromCart
+DELETE ci
+FROM CART_ITEMS ci
+JOIN CARTS c ON ci.cart_id = c.cart_id
+JOIN USERS u ON c.user_id = u.user_id
+WHERE u.username = ? AND ci.sku = ?;
+
+
+
+--SetProductQuantityInCart
+
+--check if user has cart or not
+INSERT INTO CARTS (user_id)
+SELECT u.user_id
+FROM USERS u
+WHERE u.username = ? AND NOT EXISTS (
+    SELECT 1 FROM CARTS WHERE user_id = u.user_id
+);
+
+-- Update the quantity if the product is already in the cart
+UPDATE CART_ITEMS ci
+JOIN CARTS c ON ci.cart_id = c.cart_id
+JOIN USERS u ON c.user_id = u.user_id
+SET ci.quantity = ?
+WHERE u.username = ? AND ci.sku = ?;
+
+-- Insert the product if it's not in the cart
+INSERT INTO CART_ITEMS (sku, cart_id, quantity)
+SELECT ?, c.cart_id, ?
+FROM CARTS c
+JOIN USERS u ON c.user_id = u.user_id
+WHERE u.username = ? AND NOT EXISTS (
+    SELECT 1 FROM CART_ITEMS ci WHERE ci.sku = ? AND ci.cart_id = c.cart_id
+);
+
+
+--------------------------------------------------------------
+
+--ProductManager
+
+
+--CreateProduct
+INSERT INTO PRODUCTS (sku, name, description, vendor, urlSlug, price) --Error handling need to meet constraints of its table in application
+--SELECT * FROM (SELECT ? AS sku, ? AS name, '' AS description, '' AS vendor, '' AS urlSlug, 0.0 AS price) AS tmp
+--WHERE NOT EXISTS (
+    --SELECT sku FROM PRODUCTS WHERE sku = tmp.sku
+--);
+
+
+
+--UpdateProduct
+UPDATE PRODUCTS
+SET
+  'name' = new_name_value,
+  'description' = new_description_value,
+  'vendor' = new_vendor_value,
+  'urlSlug' = new_urlSlug_value,
+  'price' = new_price_value
+WHERE 'sku' = sku_value;
+
+
+
+--GetProduct
+SELECT *
+FROM PRODUCTS
+WHERE `sku` = 'specific_sku_value';
+
+
+
+--GetProductBySlug
+SELECT *
+FROM PRODUCTS
+WHERE `urlSlug` = 'specific_slug_value';
+
+
+
+

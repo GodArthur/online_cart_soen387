@@ -1,47 +1,48 @@
-
 package soen.online_store.java;
+
 import java.util.*;
+
 /**
  * Entity class for carts
+ *
  * @author Korjon Chang
  */
 public class Cart {
-      
-    List<Product> products;
-    private String cartId;
-    
-    
-    public Cart(){
-    
-        this.products = new ArrayList<>();
+
+    private int cartId;
+    private List<CartItem> cartItems;
+
+    public Cart() {
+        this.cartItems = new ArrayList<>();
+
     }
-    
-    public Cart(String cartId){
-        
-        this.products = new ArrayList<>();
-        this.cartId = cartId;
-    }
-    
-    public Cart(List<Product> products, String cartId){
-        
-        this.products = products;
+
+    public Cart(int cartId) {
+
+        this.cartItems = new ArrayList<>();
         this.cartId = cartId;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public Cart(int cartId, List<CartItem> cartItems) {
+        this.cartId = cartId;
+        this.cartItems = cartItems;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    public String getCartId() {
+    public int getCartId() {
         return cartId;
     }
 
-    public void setCartId(String cartId) {
+    public void setCartId(int cartId) {
         this.cartId = cartId;
     }
-    
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
+
+ 
 }

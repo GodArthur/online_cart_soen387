@@ -1,21 +1,23 @@
 package soen.online_store.java;
 
+import java.util.*;
 /**
  *
  * @author Korjon Chang
  */
 public class User {
 
-    private String userID;
+    private int userID;
     private String username;
     private String password;
     private String firstName;
     private String lastName;
     private Cart cart;
+    private List<Order> orders;
     private boolean isStaff;
    
 
-    public User(String userID, String username, String password, String firstName, String lastName, boolean isStaff, Cart cart) {
+    public User(int userID, String username, String password, String firstName, String lastName, boolean isStaff, Cart cart, List<Order> orders) {
         this.userID = userID;
         this.username = username;
         this.password = password;
@@ -23,14 +25,15 @@ public class User {
         this.lastName = lastName;
         this.isStaff = isStaff;
         this.cart = cart;
+        this.orders = orders;
         
     }
 
-    public String getUserID() {
+    public int getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
+    public void setUserID(int userID) {
         this.userID = userID;
     }
 
@@ -81,5 +84,7 @@ public class User {
     public void setIsStaff(boolean isStaff) {
         this.isStaff = isStaff;
     }
+    
+    
 
 }

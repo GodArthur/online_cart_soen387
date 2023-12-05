@@ -8,7 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Properties;
 import soen.online_store.java.User;
+import soen.online_store.java.persistence.DataManager;
+import soen.online_store.java.persistence.DatabaseConnection;
 
 /**
  *
@@ -32,41 +35,42 @@ public class LoginServlet extends HttpServlet {
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
     
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
     
-        String username = request.getParameter("username");
         String password = request.getParameter("password");
         
-        List<User> users = (List<User>) getServletContext().getAttribute("users");
         
-        boolean loginSuccessful = false;
-        User loggedUser = null;
-        
-        for (User user : users) {
-        if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-            loginSuccessful = true;
-            loggedUser = user;
-            break;
-        }
-    }
+         // Establish a database connection
+    Properties configProps = (Properties) getServletContext().getAttribute("dbConfig");
+    String dbUrl = configProps.getProperty("database.url");
+    
 
+    DatabaseConnection dbConnection = new DatabaseConnection(dbUrl);
+    DataManager dataManager = new DataManager(dbConnection);
         
-        if (loginSuccessful) {
+     // Check if the username and password match a user in the database
+    User loggedUser = dataManager.getUserByPassword(password);
+
+    if (loggedUser != null) {
         // get or create session
-         HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
 
         // Store user information in the session
         session.setAttribute("user", loggedUser);
-        
+
         // Successful login, redirect to a success page
-        response.sendRedirect(request.getContextPath() + "/index.jsp");
-        
-        } else {
+        response.sendRedirect(request.getContextPath() + "/Home");
+
+    } else {
         // Failed login, redirect back to the login page with an error message
-        request.setAttribute("error", "Invalid username or password");
+        request.setAttribute("error", "Invalid password");
         request.getRequestDispatcher("/login.jsp").forward(request, response);
-        }
+    }
+
+    
+   
 }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
