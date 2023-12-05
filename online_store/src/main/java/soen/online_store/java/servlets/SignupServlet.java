@@ -46,7 +46,7 @@ public class SignupServlet extends HttpServlet {
 
         processRequest(request, response);
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -62,17 +62,32 @@ public class SignupServlet extends HttpServlet {
         DatabaseConnection dbConnection = new DatabaseConnection(dbUrl);
         DataManager dataManager = new DataManager(dbConnection);
 
-        boolean isUserCreated = dataManager.createUser(firstname, lastname, password);
+        // Use getUserByPassword to check if the password already exists
+         User existingUser = dataManager.getUserByPassword(password);
+        
+       
+        
+        if (existingUser != null) {
+               // Password already exists
+               request.setAttribute("error", "Password already exists. Please choose a different password.");
+               request.getRequestDispatcher("/signup.jsp").forward(request, response);
+           } else {
+               // Password does not exist, proceed to create the user
+               boolean isUserCreated = dataManager.createUser(firstname, lastname, password);
 
-        if (isUserCreated) {
-
-            request.setAttribute("success", "Password change successfull");
-        } else {
-
-            request.setAttribute("error", "Password already exists");
-        }
-
-        request.getRequestDispatcher("/Login").forward(request, response);
-
+               if (isUserCreated) {
+                   request.setAttribute("success", "Account created successfully.");
+                   request.getRequestDispatcher("/Login").forward(request, response);
+               } else {
+                   request.setAttribute("error", "An error occurred while creating the account.");
+                   request.getRequestDispatcher("/signup.jsp").forward(request, response);
+               }
+           }
+        
     }
+        
+ 
+   
+  
+  
 }
