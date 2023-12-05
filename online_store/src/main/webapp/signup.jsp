@@ -69,8 +69,8 @@
                     <input type="password" class="form-control" id="password" name="password" placeholder="min 4 characters" required>
                 </div>
                 <div class="form-group">
-                    <label for="confirmNewPassword">Confirm New Password</label>
-                    <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword" required>
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Create Account</button>
             </form>
